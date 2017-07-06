@@ -41,11 +41,12 @@ class Virustotal():
 
 
 
-    def rscReport(self):
+    def rscReport(self, fileMd5):
         """ Get latest report of resource """
+        print("fileMd5 : {}".format(fileMd5))
 
         base = self.base + 'file/report'
-        parameters = {"resource": '7b543a42f24893090aad2087966f616c', "apikey": self.apikey} # 여기 수정해야함
+        parameters = {"resource": fileMd5, "apikey": self.apikey} # 여기 수정해야함
         r = requests.post(base, data=parameters)
         resp = r.json()
         results = parse_resp(resp)
@@ -146,12 +147,14 @@ def parse_resp(resp):
     return buf
 
 main = Virustotal()
-dic = (main.rscReport())
-
+print (main.md5())
+var = main.md5()
+dic = main.rscReport(var)
+# dic = (main.rscReport(var))
+#
 if dic['positives'] >= 10:
     print("VIRUS!!!")
 else:
     print("NOMAL FILE")
 print ("total = " , dic['total'],"positives = " , dic['positives'])
 
-#print (main.md5())
