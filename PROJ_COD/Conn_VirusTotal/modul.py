@@ -19,7 +19,8 @@ class Virustotal():
     def __init__(self):
         self.host = "www.virustotal.com"
         self.base = "https://www.virustotal.com/vtapi/v2/"
-        self.apikey = "bbc972972f5db6166251b2856d0ac39a8d64da57f7458e3ceae0a8d5ea9be9a4"
+        #self.apikey = "bbc972972f5db6166251b2856d0ac39a8d64da57f7458e3ceae0a8d5ea9be9a4"
+        self.apikey = "1debafcb5beab36b14e610bf8b8fdf33a86cd59bffc8413b36c212bf260284b7"
         self.filepath = input("file path :")    #
 
 
@@ -40,17 +41,14 @@ class Virustotal():
 
 
 
-
-    def rscReport(self, fileMd5):
+    def rscReport(self,filemd5):
         """ Get latest report of resource """
-        print("fileMd5 : {}".format(fileMd5))
 
         base = self.base + 'file/report'
-        parameters = {"resource": fileMd5, "apikey": self.apikey} # 여기 수정해야함
+        parameters = {"resource": filemd5, "apikey": self.apikey}
         r = requests.post(base, data=parameters)
         resp = r.json()
         results = parse_resp(resp)
-        print(self.md5)
         return results
 
     def urlReport(self, rsc, scan=0):
@@ -147,14 +145,13 @@ def parse_resp(resp):
     return buf
 
 main = Virustotal()
-print (main.md5())
+#print (main.md5())
 var = main.md5()
 dic = main.rscReport(var)
-# dic = (main.rscReport(var))
-#
+
+
 if dic['positives'] >= 10:
     print("VIRUS!!!")
 else:
     print("NOMAL FILE")
 print ("total = " , dic['total'],"positives = " , dic['positives'])
-
