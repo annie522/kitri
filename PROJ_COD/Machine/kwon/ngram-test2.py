@@ -3,18 +3,19 @@ sys.path.append('C:\\Users\\zzabz\\PycharmProjects\\Shutdown\\kitri\\PROJ_COD\\M
 sys.path.append('C:\\Users\\zzabz\\PycharmProjects\\Shutdown\\kitri\\PROJ_COD')
 from get_BinToHex22222 import sectionData
 
-def ngram(s, num):
+def ngram(s, num, num1):
     res = []
     slen = len(s) - num + 1
     for i in range(slen):
         ss = s[i:i+num]
         res.append(s[i:i+num])
   #  print("res : ",res)
+    if num1 ==1: print("res : ",res)
     return res
 
 def diff_ngram(sa, sb, num):
-    a = ngram(sa, num)
-    b = ngram(sb, num)
+    a = ngram(sa, num,0)
+    b = ngram(sb, num,1)
     r = []
     cnt = 0
     for i in a:

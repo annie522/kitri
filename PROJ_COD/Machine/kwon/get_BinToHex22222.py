@@ -68,4 +68,4 @@ def sectionData():
     IN.close # 파일 닫기
     return datas
 
-print(sectionData())
+#print(sectionData())
