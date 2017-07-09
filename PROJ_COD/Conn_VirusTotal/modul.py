@@ -143,7 +143,7 @@ def parse_resp(resp):
         buf[item] = resp[item]
 
     return buf
-
+'''
 main = Virustotal()
 #print (main.md5())
 var = main.md5()
@@ -154,4 +154,4 @@ if dic['positives'] >= 10:
     print("VIRUS!!!")
 else:
     print("NOMAL FILE")
-print ("total = " , dic['total'],"positives = " , dic['positives'])
+print ("total = " , dic['total'],"positives = " , dic['positives'])'''

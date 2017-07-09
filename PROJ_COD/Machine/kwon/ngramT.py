@@ -1,7 +1,7 @@
 import sys
-sys.path.append('C:\\Users\\zzabz\\PycharmProjects\\Shutdown\\kitri\\PROJ_COD\\Machine')
-sys.path.append('C:\\Users\\zzabz\\PycharmProjects\\Shutdown\\kitri\\PROJ_COD')
-from get_BinToHex22222 import sectionData
+sys.path.append('C:\\Users\\zzabz\\PycharmProjects\\Shutdown\\kitri\\PROJ_COD\\Machine\\kwon')
+
+from kitri.PROJ_COD.Machine.kwon.get_BinToHex22222 import sectionData
 
 def ngram(s, num, num1):
     res = []
@@ -24,7 +24,7 @@ def diff_ngram(sa, sb, num):
                 cnt += 1
                 r.append(i)
     return cnt / len(a), r
-
+'''
 
 # a = getTextSection()
 # print("a",a)
@@ -37,3 +37,4 @@ c = "0020C0A34033C0A21302456334033C0A34033C0A34033C0A34033C0A34033C0A34033C0A340
 r4, word4  = diff_ngram(a, DATA, 4)
 
 print("4-gram:", r4, word4)
+'''

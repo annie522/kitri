@@ -2,7 +2,7 @@ import sys
 sys.path.append('C:\\Users\\zzabz\\PycharmProjects\\Shutdown\\kitri\\PROJ_COD\\Machine')
 sys.path.append('C:\\Users\\zzabz\\PycharmProjects\\Shutdown\\kitri\\PROJ_COD')
 
-import get_BinToHex22222
+from .get_BinToHex22222 import sectionData
 
 def ngram(s, num):
     res = []
