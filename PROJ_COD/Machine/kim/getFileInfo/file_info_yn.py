@@ -1,6 +1,7 @@
 import pefile
 import distorm3
-import re
+import sys
+import pymongo
 
 section_characteristics = [
     ('IMAGE_SCN_TYPE_REG', 0x00000000),  # reserved
@@ -64,19 +65,13 @@ def retrieve_flags(flag_dict, flag_filter):
 
 
 section_flags = retrieve_flags(SECTION_CHARACTERISTICS, 'IMAGE_SCN_')
-#print(section_characteristics)
-#print(section_flags)
-#filepath = sys.argv[1]
-#print(filepath)
-def get_info():                     #def get_info(filepath)
+
+def get_info():
     pe = pefile.PE('calc.exe')
     op_list_count = {}
-    section_name = {}
-    api_list = []
 
     for section in pe.sections:
         flags = []
-#        t = section
         for flag in sorted(section_flags):
             if getattr(section, flag[0]):
                 flags.append(flag[0])
@@ -84,44 +79,28 @@ def get_info():                     #def get_info(filepath)
             iterable = distorm3.DecodeGenerator(0, section.get_data(), distorm3.Decode32Bits)
 
             for (offset, size, instruction, hexdump) in iterable:
-                #print("%.8x: %-32s %s" % (offset, hexdump, instruction))
                 op_code = instruction.split()[0]
+                # print("11111111111111     ",op_code)
                 op_code = str(op_code).lstrip('b')
-                #print (op_code)
+                # print("222222222222222    ",op_code)
                 if op_code not in op_list_count.keys():
+                    # op_list_count[op_code.replace("'","")] = 1
                     op_list_count[op_code] = 1
                 elif op_code in op_list_count.keys():
                     op_list_count[op_code] = op_list_count[op_code] + 1
 
-            for flag in sorted(section_flags):
-                if getattr(section, flag[0]):
-                    flags.append(flag[0])
-        s_name1 = str(section.Name)
-        #print(s_name1)
-        s_name = re.sub(r"[b'|\\x00]", "", s_name1)
-        if s_name == '.tet':
-            s_name = '.text'    #이거 자꾸 tet 나와서 부셔버릴뻔
-        #s_name = (re.split(r"[\b'|\x00]",s_name1))
-        #print(type(s_name))
-        section_name[s_name] = section.get_entropy()
-
-    pe.parse_data_directories(
-        pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_IMPORT'])
-    try:
-        for entry in pe.DIRECTORY_ENTRY_IMPORT:
-            for imp in entry.imports:
-                api_list.append(imp.name)
-    except:
-        pass
-
-    try:
-        for exp in pe.DIRECTORY_ENTRY_EXPORT.symbols:
-            api_list.append(exp.name)
-    except:
-        pass
-    #print (type(section_name))   dic
-    #print (type(op_list_count))  dic
-    #print (type(api_list))       list
-    return section_name, op_list_count, api_list
-    #return api_list
+    return op_list_count
 print(get_info())
+# get_info()
+insert_test_doc = get_info()
+print(insert_test_doc)
+
+connection = pymongo.MongoClient("mongodb://192.168.0.13:27017")
+db = connection.maldb
+users = db.users
+
+try:
+    users.insert(insert_test_doc)
+    print("[+] insert success", sys.exc_info()[0])
+except:
+    print("[+] insert failed",sys.exc_info()[0])

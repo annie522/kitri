@@ -28,7 +28,7 @@ import magic
 import os
 import socket
 import datetime
-import vtquery
+# import vtquery
 import time
 import pymongo
 
