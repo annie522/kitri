@@ -57,7 +57,6 @@ section_characteristics = [
 
 SECTION_CHARACTERISTICS = dict([(e[1], e[0]) for e in section_characteristics] + section_characteristics)
 
-
 def retrieve_flags(flag_dict, flag_filter):
     return [(f[0], f[1]) for f in list(flag_dict.items()) if
             isinstance(f[0], (str, bytes)) and f[0].startswith(flag_filter)]
@@ -124,4 +123,6 @@ def get_info():                     #def get_info(filepath)
     #print (type(api_list))       list
     return section_name, op_list_count, api_list
     #return api_list
+#print(retrieve_flags())
+print(section_flags)
 print(get_info())
