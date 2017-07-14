@@ -1,5 +1,8 @@
 import sys
+from collections import OrderedDict
+
 sys.path.append('C:\\Users\\zzabz\\PycharmProjects\\Shutdown\\kitri\\PROJ_COD\\Machine\\kwon')
+
 
 from kitri.PROJ_COD.Machine.kwon.get_BinToHex22222 import sectionData
 
@@ -10,7 +13,8 @@ def ngram(s, num, num1):
         ss = s[i:i+num]
         res.append(s[i:i+num])
   #  print("res : ",res)
-    if num1 ==1: print("res : ",res)
+  #  if num1 ==1: print("res : ",res)
+    print("ngarm 되는중")
     return res
 
 def diff_ngram(sa, sb, num):
@@ -18,12 +22,30 @@ def diff_ngram(sa, sb, num):
     b = ngram(sb, num,1)
     r = []
     cnt = 0
+    print(len(a))
     for i in a:
         for j in b:
             if i == j:
                 cnt += 1
                 r.append(i)
+    print(cnt)
+    print("탈출!!!")
     return cnt / len(a), r
+
+def ngram_analyze(n,content):
+    ngram_dictionary= OrderedDict()
+    for i in range(0, len(content)-n):
+        nword =""
+        for j in range(0,n):
+            if content[i+j] != '\n':
+                nword += content[i+j]
+        if nword in ngram_dictionary:
+            ngram_dictionary[nword] +=1
+        else:
+            ngram_dictionary[nword] =1
+    return ngram_dictionary
+
+
 '''
 
 # a = getTextSection()
