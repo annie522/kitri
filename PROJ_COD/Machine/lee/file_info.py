@@ -63,7 +63,6 @@ section_characteristics = [
 
 SECTION_CHARACTERISTICS = dict([(e[1], e[0]) for e in section_characteristics] + section_characteristics)
 
-
 def retrieve_flags(flag_dict, flag_filter):
     """Read the flags from a dictionary and return them in a usable form.
 
@@ -138,4 +137,6 @@ def get_info():                     #def get_info(filepath)
     #print (type(api_list))       list
     return section_name, op_list_count, api_list
     #return api_list
+#print(retrieve_flags())
+print(section_flags)
 print(get_info())

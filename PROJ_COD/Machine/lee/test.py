@@ -1,141 +1,256 @@
-import pefile
-import sys
-import distorm3
-from hashlib import sha1
-from hashlib import sha256
-from hashlib import sha512
-from hashlib import md5
 import pymongo
-import re
+import tensorflow as tf
+import numpy as np
+import os
+import time
+import datetime
+import data_helpers
+from text_cnn import TextCNN
+from tensorflow.contrib import learn
 
-section_characteristics = [
-    ('IMAGE_SCN_TYPE_REG', 0x00000000),  # reserved
-    ('IMAGE_SCN_TYPE_DSECT', 0x00000001),  # reserved
-    ('IMAGE_SCN_TYPE_NOLOAD', 0x00000002),  # reserved
-    ('IMAGE_SCN_TYPE_GROUP', 0x00000004),  # reserved
-    ('IMAGE_SCN_TYPE_NO_PAD', 0x00000008),  # reserved
-    ('IMAGE_SCN_TYPE_COPY', 0x00000010),  # reserved
+connection = pymongo.MongoClient("mongodb://localhost")
+db = connection.malware_zoo
+learning_data = db.learning_data
 
-    ('IMAGE_SCN_CNT_CODE', 0x00000020),
-    ('IMAGE_SCN_CNT_INITIALIZED_DATA', 0x00000040),
-    ('IMAGE_SCN_CNT_UNINITIALIZED_DATA', 0x00000080),
+# Parameters
+# ==================================================
 
-    ('IMAGE_SCN_LNK_OTHER', 0x00000100),
-    ('IMAGE_SCN_LNK_INFO', 0x00000200),
-    ('IMAGE_SCN_LNK_OVER', 0x00000400),  # reserved
-    ('IMAGE_SCN_LNK_REMOVE', 0x00000800),
-    ('IMAGE_SCN_LNK_COMDAT', 0x00001000),
+# Model Hyperparameters
+tf.flags.DEFINE_integer("embedding_dim", 128, "Dimensionality of character embedding (default: 128)")
+tf.flags.DEFINE_string("filter_sizes", "2,3,4", "Comma-separated filter sizes (default: '3,4,5')")
+tf.flags.DEFINE_integer("num_filters", 128, "Number of filters per filter size (default: 128)")
+tf.flags.DEFINE_float("dropout_keep_prob", 0.5, "Dropout keep probability (default: 0.5)")
+tf.flags.DEFINE_float("l2_reg_lambda", 0.0, "L2 regularizaion lambda (default: 0.0)")
 
-    ('IMAGE_SCN_MEM_PROTECTED', 0x00004000),  # obsolete
-    ('IMAGE_SCN_NO_DEFER_SPEC_EXC', 0x00004000),
-    ('IMAGE_SCN_GPREL', 0x00008000),
-    ('IMAGE_SCN_MEM_FARDATA', 0x00008000),
-    ('IMAGE_SCN_MEM_SYSHEAP', 0x00010000),  # obsolete
-    ('IMAGE_SCN_MEM_PURGEABLE', 0x00020000),
-#    ('IMAGE_SCN_MEM_16BIT', 0x00020000),
-    ('IMAGE_SCN_MEM_LOCKED', 0x00040000),
-    ('IMAGE_SCN_MEM_PRELOAD', 0x00080000),
+# Training parameters
+tf.flags.DEFINE_integer("batch_size", 64, "Batch Size (default: 64)")
+tf.flags.DEFINE_integer("num_epochs", 200, "Number of training epochs (default: 200)")
+tf.flags.DEFINE_integer("evaluate_every", 20, "Evaluate model on dev set after this many steps (default: 100)")
+tf.flags.DEFINE_integer("checkpoint_every", 200, "Save model after this many steps (default: 100)")
+# Misc Parameters
+tf.flags.DEFINE_boolean("allow_soft_placement", True, "Allow device soft device placement")
+tf.flags.DEFINE_boolean("log_device_placement", False, "Log placement of ops on devices")
 
-    ('IMAGE_SCN_ALIGN_1BYTES', 0x00100000),
-    ('IMAGE_SCN_ALIGN_2BYTES', 0x00200000),
-    ('IMAGE_SCN_ALIGN_4BYTES', 0x00300000),
-    ('IMAGE_SCN_ALIGN_8BYTES', 0x00400000),
-    ('IMAGE_SCN_ALIGN_16BYTES', 0x00500000),  # default alignment
-    ('IMAGE_SCN_ALIGN_32BYTES', 0x00600000),
-    ('IMAGE_SCN_ALIGN_64BYTES', 0x00700000),
-    ('IMAGE_SCN_ALIGN_128BYTES', 0x00800000),
-    ('IMAGE_SCN_ALIGN_256BYTES', 0x00900000),
-    ('IMAGE_SCN_ALIGN_512BYTES', 0x00A00000),
-    ('IMAGE_SCN_ALIGN_1024BYTES', 0x00B00000),
-    ('IMAGE_SCN_ALIGN_2048BYTES', 0x00C00000),
-    ('IMAGE_SCN_ALIGN_4096BYTES', 0x00D00000),
-    ('IMAGE_SCN_ALIGN_8192BYTES', 0x00E00000),
-    ('IMAGE_SCN_ALIGN_MASK', 0x00F00000),
-
-    ('IMAGE_SCN_LNK_NRELOC_OVFL', 0x01000000),
-    ('IMAGE_SCN_MEM_DISCARDABLE', 0x02000000),
-    ('IMAGE_SCN_MEM_NOT_CACHED', 0x04000000),
-    ('IMAGE_SCN_MEM_NOT_PAGED', 0x08000000),
-    ('IMAGE_SCN_MEM_SHARED', 0x10000000),
-    ('IMAGE_SCN_MEM_EXECUTE', 0x20000000),
-    ('IMAGE_SCN_MEM_READ', 0x40000000),
-    ('IMAGE_SCN_MEM_WRITE', 0x80000000)]
-
-SECTION_CHARACTERISTICS = dict([(e[1], e[0]) for e in section_characteristics] + section_characteristics)
+FLAGS = tf.flags.FLAGS
+FLAGS._parse_flags()
+print("\nParameters:")
+for attr, value in sorted(FLAGS.__flags.items()):
+    print("{}={}".format(attr.upper(), value))
+print("")
 
 
-def retrieve_flags(flag_dict, flag_filter):
-    """Read the flags from a dictionary and return them in a usable form.
-
-    Will return a list of (flag, value) for all flags in "flag_dict"
-    matching the filter "flag_filter".
-    """
-
-    return [(f[0], f[1]) for f in list(flag_dict.items()) if
-            isinstance(f[0], (str, bytes)) and f[0].startswith(flag_filter)]
+# Data Preparatopn
+# ==================================================
+# Load data
 
 
-section_flags = retrieve_flags(SECTION_CHARACTERISTICS, 'IMAGE_SCN_')
-#print(section_characteristics)
-#print(section_flags)
-#filepath = sys.argv[1]
-#print(filepath)
-def get_info():                     #def get_info(filepath)
-    pe = pefile.PE('calc.exe')
-    op_list_count = {}
-    section_name = {}
-    api_list = []
+def get_sample_data():
+    text = []
+    label = []
+    r_label = []
+    detect_and_num = {}
+    zoo_data = learning_data.find()
+    for line in zoo_data:
+        text_val = line["opcode"].keys() + line["ie_api"] + line["section_info"].keys()
+        detect_val = line['detect'].split(".")[0]
+        # detect_val = line['detect']
+        text.append(" ".join(str(e) for e in text_val))
 
-    for section in pe.sections:
-        flags = []
-#        t = section
-        for flag in sorted(section_flags):
-            if getattr(section, flag[0]):
-                flags.append(flag[0])
-        if 'IMAGE_SCN_MEM_EXECUTE' in flags:
-            iterable = distorm3.DecodeGenerator(0, section.get_data(), distorm3.Decode32Bits)
-#    print('iterable = ',iterable,'t = ',t)
+        if len(detect_and_num) == 0:
+            detect_and_num[detect_val] = 1
 
-#print('get = ',get_info())
-            for (offset, size, instruction, hexdump) in iterable:
-                #print("%.8x: %-32s %s" % (offset, hexdump, instruction))
-                op_code = instruction.split()[0]
-                op_code = str(op_code).lstrip('b')
-                #print (op_code)
-                if op_code not in op_list_count.keys():
-                    op_list_count[op_code] = 1
-                elif op_code in op_list_count.keys():
-                    op_list_count[op_code] = op_list_count[op_code] + 1
+        if detect_val not in detect_and_num.keys():
+            current_max = detect_and_num[max(detect_and_num, key=detect_and_num.get)]
+            detect_and_num[detect_val] = current_max + 1
 
-            for flag in sorted(section_flags):
-                if getattr(section, flag[0]):
-                    flags.append(flag[0])
-        s_name1 = str(section.Name)
-        #print(s_name1)
-        s_name = re.sub(r"[b'|\\x00]", "", s_name1)
-        if s_name == '.tet':
-            s_name = '.text'    #이거 자꾸 tet 나와서 부셔버릴뻔
-        #s_name = (re.split(r"[\b'|\x00]",s_name1))
-        #print(type(s_name))
-        section_name[s_name] = section.get_entropy()
+        label.append(detect_and_num[detect_val])
 
-    pe.parse_data_directories(
-        pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_IMPORT'])
-    try:
-        for entry in pe.DIRECTORY_ENTRY_IMPORT:
-            for imp in entry.imports:
-                api_list.append(imp.name)
-    except:
-        pass
+    max_num = max(label)
+    for l_num in label:
+        lst = [0 for _ in range(max_num)]
+        lst[-l_num] = 1
+        r_label.append(lst)
 
-    try:
-        for exp in pe.DIRECTORY_ENTRY_EXPORT.symbols:
-            api_list.append(exp.name)
-    except:
-        pass
-    #print (type(section_name))   dic
-    #print (type(op_list_count))  dic
-    #print (type(api_list))       list
-    return section_name, op_list_count, api_list
-    #return api_list
-print(get_info())
+    r_label = np.array(r_label)
+    return text, r_label, detect_and_num
+
+
+print("Loading data...")
+x_text, y, dict_z = get_sample_data()
+
+# Build vocabulary
+max_document_length = max([len(x.split(" ")) for x in x_text])
+vocab_processor = learn.preprocessing.VocabularyProcessor(max_document_length)
+x = np.array(list(vocab_processor.fit_transform(x_text)))
+
+# Randomly shuffle data
+np.random.seed(10)
+shuffle_indices = np.random.permutation(np.arange(len(y)))
+x_shuffled = x[shuffle_indices]
+y_shuffled = y[shuffle_indices]
+
+# Split train/test set
+# TODO: This is very crude, should use cross-validation
+cut = int(len(x_shuffled) * 0.90)
+
+x_train, x_dev = x_shuffled[:cut], x_shuffled[cut:]
+y_train, y_dev = y_shuffled[:cut], y_shuffled[cut:]
+print("Data Size: {:d}".format(len(x_shuffled)))
+print("Label Size: {:d}".format(len(dict_z)))
+print("Vocabulary Size: {:d}".format(len(vocab_processor.vocabulary_)))
+print("Train/Dev split: {:d}/{:d}".format(len(y_train), len(y_dev)))
+# data set make end
+
+
+
+
+# Training
+# ==================================================
+
+with tf.Graph().as_default():
+    session_conf = tf.ConfigProto(
+        allow_soft_placement=FLAGS.allow_soft_placement,
+        log_device_placement=FLAGS.log_device_placement)
+    sess = tf.Session(config=session_conf)
+    with sess.as_default():
+        cnn = TextCNN(
+            sequence_length=x_train.shape[1],
+            num_classes=y_train.shape[1],
+            vocab_size=len(vocab_processor.vocabulary_),
+            embedding_size=FLAGS.embedding_dim,
+            filter_sizes=list(map(int, FLAGS.filter_sizes.split(","))),
+            num_filters=FLAGS.num_filters,
+            l2_reg_lambda=FLAGS.l2_reg_lambda)
+
+        # Define Training procedure
+        global_step = tf.Variable(0, name="global_step", trainable=False)
+        optimizer = tf.train.AdamOptimizer(1e-3)
+        grads_and_vars = optimizer.compute_gradients(cnn.loss)
+        train_op = optimizer.apply_gradients(grads_and_vars, global_step=global_step)
+
+        # Keep track of gradient values and sparsity (optional)
+        grad_summaries = []
+        for g, v in grads_and_vars:
+            if g is not None:
+                grad_hist_summary = tf.histogram_summary("{}/grad/hist".format(v.name), g)
+                sparsity_summary = tf.scalar_summary("{}/grad/sparsity".format(v.name), tf.nn.zero_fraction(g))
+                grad_summaries.append(grad_hist_summary)
+                grad_summaries.append(sparsity_summary)
+        grad_summaries_merged = tf.merge_summary(grad_summaries)
+
+        # Output directory for models and summaries
+        timestamp = str(int(time.time()))
+        out_dir = os.path.abspath(os.path.join(os.path.curdir, "runs", timestamp))
+        print("Writing to {}\n".format(out_dir))
+
+        # Summaries for loss and accuracy
+        loss_summary = tf.scalar_summary("loss", cnn.loss)
+        acc_summary = tf.scalar_summary("accuracy", cnn.accuracy)
+
+        # Train Summaries
+        train_summary_op = tf.merge_summary([loss_summary, acc_summary, grad_summaries_merged])
+        train_summary_dir = os.path.join(out_dir, "summaries", "train")
+        train_summary_writer = tf.train.SummaryWriter(train_summary_dir, sess.graph)
+
+        # Dev summaries
+        dev_summary_op = tf.merge_summary([loss_summary, acc_summary])
+        dev_summary_dir = os.path.join(out_dir, "summaries", "dev")
+        dev_summary_writer = tf.train.SummaryWriter(dev_summary_dir, sess.graph)
+
+        # Checkpoint directory. Tensorflow assumes this directory already exists so we need to create it
+        checkpoint_dir = os.path.abspath(os.path.join(out_dir, "checkpoints"))
+        checkpoint_prefix = os.path.join(checkpoint_dir, "model")
+        if not os.path.exists(checkpoint_dir):
+            os.makedirs(checkpoint_dir)
+        saver = tf.train.Saver(tf.all_variables())
+
+        # Write vocabulary
+        vocab_processor.save(os.path.join(out_dir, "vocab"))
+
+        # Initialize all variables
+        sess.run(tf.initialize_all_variables())
+
+
+        def train_step(x_batch, y_batch):
+            """
+            A single training step
+            """
+            feed_dict = {
+                cnn.input_x: x_batch,
+                cnn.input_y: y_batch,
+                cnn.dropout_keep_prob: FLAGS.dropout_keep_prob
+            }
+            _, step, summaries, loss, accuracy = sess.run(
+                [train_op, global_step, train_summary_op, cnn.loss, cnn.accuracy],
+                feed_dict)
+            time_str = datetime.datetime.now().isoformat()
+            print("{}: step {}, loss {:g}, acc {:g}".format(time_str, step, loss, accuracy))
+            train_summary_writer.add_summary(summaries, step)
+
+
+        def dev_step(x_batch, y_batch, writer=None):
+            """
+            Evaluates model on a dev set
+            """
+            feed_dict = {
+                cnn.input_x: x_batch,
+                cnn.input_y: y_batch,
+                cnn.dropout_keep_prob: 1.0
+            }
+            step, summaries, loss, accuracy, predictions = sess.run(
+                [global_step, dev_summary_op, cnn.loss, cnn.accuracy, cnn.predictions],
+                feed_dict)
+            time_str = datetime.datetime.now().isoformat()
+            print("{}: step {}, loss {:g}, acc {:g}".format(time_str, step, loss, accuracy))
+
+            # compare data
+            max_dict_z = dict_z[max(dict_z, key=lambda i: dict_z[i])]
+            predict_list = []
+            true_list = []
+            o_x_list = []
+            for one_predict in predictions:
+                predict_list.append(dict_z.keys()[dict_z.values().index(max_dict_z - one_predict)])
+
+            for one_batch in y_batch:
+                true_list.append(dict_z.keys()[dict_z.values().index(max_dict_z - one_batch.tolist().index(1))])
+
+            for num in range(len(predict_list)):
+                if predict_list[num] == true_list[num]:
+                    o_x_list.append("O")
+                else:
+                    o_x_list.append("X")
+
+            print
+            "[+] Ahnlab-V3 Detection [+]"
+            print
+            true_list
+            print
+            ""
+            print
+            "[+] Leekyu Machine Detection [+]"
+            print
+            predict_list
+            print
+            ""
+            print
+            o_x_list
+
+            if writer:
+                writer.add_summary(summaries, step)
+
+
+        # Generate batches
+        batches = data_helpers.batch_iter(
+            list(zip(x_train, y_train)), FLAGS.batch_size, FLAGS.num_epochs)
+        # Training loop. For each batch...
+        for batch in batches:
+            x_batch, y_batch = zip(*batch)
+            train_step(x_batch, y_batch)
+            current_step = tf.train.global_step(sess, global_step)
+            if current_step % FLAGS.evaluate_every == 0:
+                print("\nEvaluation:")
+                dev_step(x_dev, y_dev, writer=dev_summary_writer)
+                print("")
+            if current_step % FLAGS.checkpoint_every == 0:
+                path = saver.save(sess, checkpoint_prefix, global_step=current_step)
+                print("Saved model checkpoint to {}\n".format(path))
