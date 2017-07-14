@@ -2,7 +2,6 @@ import pefile
 import distorm3
 import sys
 import pymongo
-import glob
 
 section_characteristics = [
     ('IMAGE_SCN_TYPE_REG', 0x00000000),  # reserved
@@ -68,48 +67,40 @@ def retrieve_flags(flag_dict, flag_filter):
 section_flags = retrieve_flags(SECTION_CHARACTERISTICS, 'IMAGE_SCN_')
 
 def get_info():
-        pe = pefile.PE(i)
-        op_list_count = {}
+    pe = pefile.PE('calc.exe')
+    op_list_count = {}
 
-        for section in pe.sections:
-            flags = []
-            for flag in sorted(section_flags):
-                if getattr(section, flag[0]):
-                    flags.append(flag[0])
-            if 'IMAGE_SCN_MEM_EXECUTE' in flags:
-                iterable = distorm3.DecodeGenerator(0, section.get_data(), distorm3.Decode32Bits)
+    for section in pe.sections:
+        flags = []
+        for flag in sorted(section_flags):
+            if getattr(section, flag[0]):
+                flags.append(flag[0])
+        if 'IMAGE_SCN_MEM_EXECUTE' in flags:
+            iterable = distorm3.DecodeGenerator(0, section.get_data(), distorm3.Decode32Bits)
 
-                for (offset, size, instruction, hexdump) in iterable:
-                    op_code = instruction.split()[0]
-                    # print("11111111111111     ",op_code)
-                    op_code = str(op_code).lstrip('b')
-                    # print("222222222222222    ",op_code)
-                    if op_code not in op_list_count.keys():
-                        # op_list_count[op_code.replace("'","")] = 1
-                        op_list_count[op_code] = 1
-                    elif op_code in op_list_count.keys():
-                        op_list_count[op_code] = op_list_count[op_code] + 1
+            for (offset, size, instruction, hexdump) in iterable:
+                op_code = instruction.split()[0]
+                # print("11111111111111     ",op_code)
+                op_code = str(op_code).lstrip('b')
+                # print("222222222222222    ",op_code)
+                if op_code not in op_list_count.keys():
+                    # op_list_count[op_code.replace("'","")] = 1
+                    op_list_count[op_code] = 1
+                elif op_code in op_list_count.keys():
+                    op_list_count[op_code] = op_list_count[op_code] + 1
 
-        return op_list_count
+    return op_list_count
+print(get_info())
+# get_info()
+insert_test_doc = get_info()
+print(insert_test_doc)
 
+connection = pymongo.MongoClient("mongodb://192.168.0.13:27017")
+db = connection.maldb
+users = db.users
 
-
-
-if __name__ == "__main__":
-    filelist = glob.glob('C:\\Users\\kitri\\Desktop\\new\\*.exe')
-
-    for i in filelist:
-        get_info()
-
-        insert_test_doc = get_info()
-        print(insert_test_doc)
-
-        connection = pymongo.MongoClient("mongodb://14.63.24.247:27017")
-        db = connection.maldb
-        users = db.users
-
-        try:
-            users.insert(insert_test_doc)
-            print("[+] insert success", sys.exc_info()[0])
-        except:
-            print("[+] insert failed",sys.exc_info()[0])
+try:
+    users.insert(insert_test_doc)
+    print("[+] insert success", sys.exc_info()[0])
+except:
+    print("[+] insert failed",sys.exc_info()[0])

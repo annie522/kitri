@@ -18,16 +18,17 @@
 #
 # Requirements:
 # - BeautifulSoup 3.0.8
-from IPython.core import magic
+
 from bs4 import BeautifulSoup
 import sys
 import hashlib
 import re
 import urllib3
+import magic
 import os
 import socket
 import datetime
-#import vtquery
+# import vtquery
 import time
 import pymongo
 
@@ -42,7 +43,7 @@ str(now)
 timeout = 15
 socket.setdefaulttimeout(timeout)
 
-filename = 'pika.exe'
+
 def md5(filename):
     """Calculate the md5 hash of a file. Memory-friendly solution, it reads the file piece by piece.
     http://stackoverflow.com/questions/1131220/get-md5-hash-of-a-files-without-open-it-in-python"""
@@ -80,18 +81,16 @@ def gettype(file_):
 
 # beautifulsoup parser
 def parse(url):
-    http = urllib3.PoolManager()
-    response = http.request('GET', url)
-    var = response.status
-    return response.data
+    request = urllib3.Request(url)
 
-    #request.add_header('User-Agent', 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1)')
-    #try:
-    #    http = BeautifulSoup(urllib3.urlopen(request), "lxml")
-    #except:
-    #    print("- Error parsing %s" % (url))
-    #return
-    #return http
+
+    request.add_header('User-Agent', 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1)')
+    try:
+        http = BeautifulSoup(urllib3.urlopen(request), "lxml")
+    except:
+        print("- Error parsing %s" % (url))
+    return
+    return http
 
 
 def decisor(site, url):

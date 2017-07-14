@@ -1,11 +1,5 @@
 import pefile
-import sys
 import distorm3
-from hashlib import sha1
-from hashlib import sha256
-from hashlib import sha512
-from hashlib import md5
-import pymongo
 import re
 
 section_characteristics = [
@@ -64,12 +58,6 @@ section_characteristics = [
 SECTION_CHARACTERISTICS = dict([(e[1], e[0]) for e in section_characteristics] + section_characteristics)
 
 def retrieve_flags(flag_dict, flag_filter):
-    """Read the flags from a dictionary and return them in a usable form.
-
-    Will return a list of (flag, value) for all flags in "flag_dict"
-    matching the filter "flag_filter".
-    """
-
     return [(f[0], f[1]) for f in list(flag_dict.items()) if
             isinstance(f[0], (str, bytes)) and f[0].startswith(flag_filter)]
 
@@ -93,9 +81,7 @@ def get_info():                     #def get_info(filepath)
                 flags.append(flag[0])
         if 'IMAGE_SCN_MEM_EXECUTE' in flags:
             iterable = distorm3.DecodeGenerator(0, section.get_data(), distorm3.Decode32Bits)
-#    print('iterable = ',iterable,'t = ',t)
 
-#print('get = ',get_info())
             for (offset, size, instruction, hexdump) in iterable:
                 #print("%.8x: %-32s %s" % (offset, hexdump, instruction))
                 op_code = instruction.split()[0]

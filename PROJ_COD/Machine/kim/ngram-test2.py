@@ -1,4 +1,4 @@
-from PROJ_COD.Machine.get_BinToHex import getTextSection
+
 
 def ngram(s, num):
     res = []
