@@ -18,16 +18,17 @@
 #
 # Requirements:
 # - BeautifulSoup 3.0.8
+import magic
 from bs4 import BeautifulSoup
 import sys
 import hashlib
 import re
 import urllib2
-import magic
+import python-magic
 import os
 import socket
 import datetime
-import vtquery
+#import vtquery
 import time
 import pymongo
 
@@ -71,7 +72,7 @@ def gettype(file_):
 
 
 # ms = magic.open(magic.MAGIC_NONE)
-    ms = magic.from_buffer(file_)
+    ms = from_buffer(file_)
 # ms.load()
 # return ms.buffer(file)
     return ms
@@ -136,11 +137,11 @@ def decisor(site, url):
         fpath = dest + "/" + md5_val
         time.sleep(1)
         print("-- " + site + " Saved file type %s with md5: %s" % (filetype, md5_val))
-        try:
+        '''try:
             vtquery.get_vt_result(md5_val, fpath, url, site)
         except:
             pass
-
+'''
 
 def malwaredl(soup):
     print("- Fetching from Malware Domain List")

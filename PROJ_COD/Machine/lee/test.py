@@ -4,8 +4,8 @@ import numpy as np
 import os
 import time
 import datetime
-import data_helpers
-from text_cnn import TextCNN
+import PROJ_COD.Machine.lee.data_helpers as data_helpers
+from PROJ_COD.Machine.lee.text_cnn import TextCNN
 from tensorflow.contrib import learn
 
 connection = pymongo.MongoClient("mongodb://localhost")
@@ -220,20 +220,13 @@ with tf.Graph().as_default():
                 else:
                     o_x_list.append("X")
 
-            print
-            "[+] Ahnlab-V3 Detection [+]"
-            print
-            true_list
-            print
-            ""
-            print
-            "[+] Leekyu Machine Detection [+]"
-            print
-            predict_list
-            print
-            ""
-            print
-            o_x_list
+            print("[+] Ahnlab-V3 Detection [+]")
+            print(true_list)
+            print("")
+            print("[+] Machine Detection [+]")
+            print(predict_list)
+            print("")
+            print(o_x_list)
 
             if writer:
                 writer.add_summary(summaries, step)
