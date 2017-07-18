@@ -8,9 +8,9 @@ import PROJ_COD.Machine.lee.data_helpers as data_helpers
 from PROJ_COD.Machine.lee.text_cnn import TextCNN
 from tensorflow.contrib import learn
 
-connection = pymongo.MongoClient("mongodb://localhost")
-db = connection.malware_zoo
-learning_data = db.learning_data
+connection = pymongo.MongoClient("mongodb://203.234.103.169")
+db = connection.maldb   #db 이름 악성코드모아놓은곳
+learning_data = db.learning_data #이것도 db 인데 학습시킬애들인가
 
 # Parameters
 # ==================================================
@@ -37,7 +37,7 @@ print("\nParameters:")
 for attr, value in sorted(FLAGS.__flags.items()):
     print("{}={}".format(attr.upper(), value))
 print("")
-
+# flags 얘네들은 뭐 그냥 define 이라고 생각하면 됨
 
 # Data Preparatopn
 # ==================================================
@@ -49,49 +49,49 @@ def get_sample_data():
     label = []
     r_label = []
     detect_and_num = {}
-    zoo_data = learning_data.find()
-    for line in zoo_data:
-        text_val = line["opcode"].keys() + line["ie_api"] + line["section_info"].keys()
+    learn_data = learning_data.find()   #이거도 이름바꾸
+    for line in learn_data:
+        text_val = line["opcode"].keys() + line["ie_api"] + line["section_info"].keys() #opcode, api, section_info 저장
         detect_val = line['detect'].split(".")[0]
         # detect_val = line['detect']
-        text.append(" ".join(str(e) for e in text_val))
+        text.append(" ".join(str(e) for e in text_val)) #text에 아까 불러왔던애들 저장
 
         if len(detect_and_num) == 0:
             detect_and_num[detect_val] = 1
 
         if detect_val not in detect_and_num.keys():
             current_max = detect_and_num[max(detect_and_num, key=detect_and_num.get)]
-            detect_and_num[detect_val] = current_max + 1
+            detect_and_num[detect_val] = current_max + 1    #max 의 다음값 구해서 저장하는듯
 
-        label.append(detect_and_num[detect_val])
+        label.append(detect_and_num[detect_val])  #label에 저장하네 위에서 구한결과
 
-    max_num = max(label)
+    max_num = max(label)  #그 후 max값 변경.
     for l_num in label:
         lst = [0 for _ in range(max_num)]
         lst[-l_num] = 1
-        r_label.append(lst)
+        r_label.append(lst)  #lst 범위 max_num까지 다 1로 바꾸고 r_label에 저장
 
     r_label = np.array(r_label)
-    return text, r_label, detect_and_num
+    return text, r_label, detect_and_num # text=opcode,api,section_info , r_label= test.py에 있음 detect_and_num = 감지갯수 같은데
 
 
 print("Loading data...")
-x_text, y, dict_z = get_sample_data()
+x_text, y, dict_z = get_sample_data() # x_text = text , y = r_label , dict_z = detect_and_num
 
 # Build vocabulary
-max_document_length = max([len(x.split(" ")) for x in x_text])
+max_document_length = max([len(x.split(" ")) for x in x_text]) # 길이를 왜 구하지
 vocab_processor = learn.preprocessing.VocabularyProcessor(max_document_length)
-x = np.array(list(vocab_processor.fit_transform(x_text)))
+x = np.array(list(vocab_processor.fit_transform(x_text))) # x = x_text 마다 단어 숫자로 바꿔서 숫자로 순서 나열해놓은거
 
 # Randomly shuffle data
 np.random.seed(10)
 shuffle_indices = np.random.permutation(np.arange(len(y)))
 x_shuffled = x[shuffle_indices]
-y_shuffled = y[shuffle_indices]
+y_shuffled = y[shuffle_indices] # 0부터 y 길이까지 데이터를 섞는다.
 
 # Split train/test set
 # TODO: This is very crude, should use cross-validation
-cut = int(len(x_shuffled) * 0.90)
+cut = int(len(x_shuffled) * 0.90) # x_shuffled 길이 * 0.9 = cut
 
 x_train, x_dev = x_shuffled[:cut], x_shuffled[cut:]
 y_train, y_dev = y_shuffled[:cut], y_shuffled[cut:]
