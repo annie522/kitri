@@ -57,11 +57,11 @@ def get_sample_data():
         text.append(" ".join(str(e) for e in text_val)) #text에 아까 불러왔던애들 저장
 
         if len(detect_and_num) == 0:
-            detect_and_num[detect_val] = 1
+            detect_and_num[detect_val] = 1 # detect_and_num[바이러스이름 = 1  을 뜻하는듯
 
-        if detect_val not in detect_and_num.keys():
-            current_max = detect_and_num[max(detect_and_num, key=detect_and_num.get)]
-            detect_and_num[detect_val] = current_max + 1    #max 의 다음값 구해서 저장하는듯
+        if detect_val not in detect_and_num.keys(): # 바이러스이름이 keys 에 없으면
+            current_max = detect_and_num[max(detect_and_num, key=detect_and_num.get)] # 만들고 추가하고
+            detect_and_num[detect_val] = current_max + 1    # 값 하나 올리고
 
         label.append(detect_and_num[detect_val])  #label에 저장하네 위에서 구한결과
 
@@ -72,7 +72,7 @@ def get_sample_data():
         r_label.append(lst)  #lst 범위 max_num까지 다 1로 바꾸고 r_label에 저장
 
     r_label = np.array(r_label)
-    return text, r_label, detect_and_num # text=opcode,api,section_info , r_label= test.py에 있음 detect_and_num = 감지갯수 같은데
+    return text, r_label, detect_and_num # text=opcode,api,section_info , r_label= 악성코드종류갯수? detect_and_num = 탐지갯수 같은데
 
 
 print("Loading data...")
@@ -81,7 +81,7 @@ x_text, y, dict_z = get_sample_data() # x_text = text , y = r_label , dict_z = d
 # Build vocabulary
 max_document_length = max([len(x.split(" ")) for x in x_text]) # 길이를 왜 구하지
 vocab_processor = learn.preprocessing.VocabularyProcessor(max_document_length)
-x = np.array(list(vocab_processor.fit_transform(x_text))) # x = x_text 마다 단어 숫자로 바꿔서 숫자로 순서 나열해놓은거
+x = np.array(list(vocab_processor.fit_transform(x_text))) # x = x_text 마다 단어를 숫자순서로 바꿔서 숫자로 순서 나열해놓은거
 
 # Randomly shuffle data
 np.random.seed(10)
@@ -93,12 +93,12 @@ y_shuffled = y[shuffle_indices] # 0부터 y 길이까지 데이터를 섞는다.
 # TODO: This is very crude, should use cross-validation
 cut = int(len(x_shuffled) * 0.90) # x_shuffled 길이 * 0.9 = cut
 
-x_train, x_dev = x_shuffled[:cut], x_shuffled[cut:]
-y_train, y_dev = y_shuffled[:cut], y_shuffled[cut:]
-print("Data Size: {:d}".format(len(x_shuffled)))
-print("Label Size: {:d}".format(len(dict_z)))
-print("Vocabulary Size: {:d}".format(len(vocab_processor.vocabulary_)))
-print("Train/Dev split: {:d}/{:d}".format(len(y_train), len(y_dev)))
+x_train, x_dev = x_shuffled[:cut], x_shuffled[cut:] # 왜 한놈을 앞뒤로잘라넣는진 모르겠지만 어쩃든
+y_train, y_dev = y_shuffled[:cut], y_shuffled[cut:] # 뒤잘라넣고 앞잘라넣고
+print("Data Size: {:d}".format(len(x_shuffled))) # x == opcode
+print("Label Size: {:d}".format(len(dict_z))) # dict_z == detect_and_num   파일갯수일듯?
+print("Vocabulary Size: {:d}".format(len(vocab_processor.vocabulary_))) # 단어사전의 길이인듯
+print("Train/Dev split: {:d}/{:d}".format(len(y_train), len(y_dev))) #
 # data set make end
 
 
@@ -108,7 +108,7 @@ print("Train/Dev split: {:d}/{:d}".format(len(y_train), len(y_dev)))
 # ==================================================
 
 with tf.Graph().as_default():
-    session_conf = tf.ConfigProto(
+    session_conf = tf.ConfigProto(  #  https://github.com/tensorflow/tensorflow/blob/r1.2/tensorflow/core/protobuf/config.proto
         allow_soft_placement=FLAGS.allow_soft_placement,
         log_device_placement=FLAGS.log_device_placement)
     sess = tf.Session(config=session_conf)
@@ -125,8 +125,8 @@ with tf.Graph().as_default():
         # Define Training procedure
         global_step = tf.Variable(0, name="global_step", trainable=False)
         optimizer = tf.train.AdamOptimizer(1e-3)
-        grads_and_vars = optimizer.compute_gradients(cnn.loss)
-        train_op = optimizer.apply_gradients(grads_and_vars, global_step=global_step)
+        grads_and_vars = optimizer.compute_gradients(cnn.loss) # gradient 계산값 구하여 수동 적용  , gradient == 기울기
+        train_op = optimizer.apply_gradients(grads_and_vars, global_step=global_step) # grads_and_vars 수정
 
         # Keep track of gradient values and sparsity (optional)
         grad_summaries = []
