@@ -151,7 +151,3 @@ if dic['positives'] >= 10:
 else:
     print("NOMAL FILE")
 print ("total = " , dic['total'],"positives = " , dic['positives'])'''
-main = Virustotal()
-var = main.md5()
-dic = main.rscReport(var)
-print (dic)

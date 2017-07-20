@@ -80,7 +80,7 @@ x_text, y, dict_z = get_sample_data() # x_text = text , y = r_label , dict_z = d
 
 # Build vocabulary
 max_document_length = max([len(x.split(" ")) for x in x_text]) # 길이를 왜 구하지
-vocab_processor = learn.preprocessing.VocabularyProcessor(max_document_length)
+vocab_processor = learn.preprocessing.VocabularyProcessor(max_document_length) # 길이가 다른 문서를 max_document_length로 맞춰주는 역할
 x = np.array(list(vocab_processor.fit_transform(x_text))) # x = x_text 마다 단어를 숫자순서로 바꿔서 숫자로 순서 나열해놓은거
 
 # Randomly shuffle data
@@ -131,26 +131,26 @@ with tf.Graph().as_default():
         # Keep track of gradient values and sparsity (optional)
         grad_summaries = []
         for g, v in grads_and_vars:
-            if g is not None:
-                grad_hist_summary = tf.histogram_summary("{}/grad/hist".format(v.name), g)
-                sparsity_summary = tf.scalar_summary("{}/grad/sparsity".format(v.name), tf.nn.zero_fraction(g))
+            if g is not None: #  그래프 정의시 필요한 scalar 값마다 summary
+                grad_hist_summary = tf.histogram_summary("{}/grad/hist".format(v.name), g) # histogram == 학습과정 시각화때 사용할 데이터 직렬화하기위한 메소드
+                sparsity_summary = tf.scalar_summary("{}/grad/sparsity".format(v.name), tf.nn.zero_fraction(g)) # scalar == 학습과정을 시각화할 때 사용할 데이터를 직렬화 하기위한 메소드
                 grad_summaries.append(grad_hist_summary)
                 grad_summaries.append(sparsity_summary)
-        grad_summaries_merged = tf.merge_summary(grad_summaries)
+        grad_summaries_merged = tf.merge_summary(grad_summaries) # histogram, scalar 통합.
 
         # Output directory for models and summaries
-        timestamp = str(int(time.time()))
-        out_dir = os.path.abspath(os.path.join(os.path.curdir, "runs", timestamp))
-        print("Writing to {}\n".format(out_dir))
+        timestamp = str(int(time.time())) # 시간을 초 단위로 부동소수점 숫자로 변환
+        out_dir = os.path.abspath(os.path.join(os.path.curdir, "runs", timestamp)) # runs디렉토리 경로 == out_dir
+        print("Writing to {}\n".format(out_dir)) # runs디렉토리 경로 print
 
         # Summaries for loss and accuracy
-        loss_summary = tf.scalar_summary("loss", cnn.loss)
+        loss_summary = tf.scalar_summary("loss", cnn.loss) # scalar 로 변수를 요약 "loss" "accuracy" 이런건 태그라고 함
         acc_summary = tf.scalar_summary("accuracy", cnn.accuracy)
 
         # Train Summaries
-        train_summary_op = tf.merge_summary([loss_summary, acc_summary, grad_summaries_merged])
-        train_summary_dir = os.path.join(out_dir, "summaries", "train")
-        train_summary_writer = tf.train.SummaryWriter(train_summary_dir, sess.graph)
+        train_summary_op = tf.merge_summary([loss_summary, acc_summary, grad_summaries_merged]) # summary 통합
+        train_summary_dir = os.path.join(out_dir, "summaries", "train") # session 생성
+        train_summary_writer = tf.train.SummaryWriter(train_summary_dir, sess.graph) # summarywriter 정의
 
         # Dev summaries
         dev_summary_op = tf.merge_summary([loss_summary, acc_summary])
@@ -158,17 +158,17 @@ with tf.Graph().as_default():
         dev_summary_writer = tf.train.SummaryWriter(dev_summary_dir, sess.graph)
 
         # Checkpoint directory. Tensorflow assumes this directory already exists so we need to create it
-        checkpoint_dir = os.path.abspath(os.path.join(out_dir, "checkpoints"))
+        checkpoint_dir = os.path.abspath(os.path.join(out_dir, "checkpoints")) #
         checkpoint_prefix = os.path.join(checkpoint_dir, "model")
         if not os.path.exists(checkpoint_dir):
-            os.makedirs(checkpoint_dir)
-        saver = tf.train.Saver(tf.all_variables())
+            os.makedirs(checkpoint_dir) # 디렉터리 생성
+        saver = tf.train.Saver(tf.all_variables()) # 오퍼레이션을 실행하는 메서드와 읽고 쓰는 체크포인트 파일의 지정된 경로를 제공
 
         # Write vocabulary
-        vocab_processor.save(os.path.join(out_dir, "vocab"))
+        vocab_processor.save(os.path.join(out_dir, "vocab")) #
 
         # Initialize all variables
-        sess.run(tf.initialize_all_variables())
+        sess.run(tf.initialize_all_variables()) # 모든 변수를 병렬로 초기화
 
 
         def train_step(x_batch, y_batch):
