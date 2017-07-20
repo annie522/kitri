@@ -4,6 +4,7 @@ import sys
 import pymongo
 import glob
 import re
+import PROJ_COD.Machine.lee.vt_query as vt
 
 """
 작성일   : 2017-07-14(최초작성)
@@ -103,7 +104,7 @@ def get_info():
         s_name = s_name.replace(".", "_")
         print(s_name)
         section_name[s_name] = section.get_entropy()
-
+    vt.rsc
 
     pe.parse_data_directories(
         pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_IMPORT'])
