@@ -82,18 +82,20 @@ def get_info():
                 op_code = instruction.split()[0]
                 # print("11111111111111     ",op_code)
                 op_code = str(op_code).lstrip('b')
+                op_code = str(op_code).replace("\'","")
                 # print("222222222222222    ",op_code)
                 if op_code not in op_list_count.keys():
                     # op_list_count[op_code.replace("'","")] = 1
                     op_list_count[op_code] = 1
                 elif op_code in op_list_count.keys():
                     op_list_count[op_code] = op_list_count[op_code] + 1
-
+    print(op_list_count)
+    print(type(op_list_count))
     return op_list_count
 print(get_info())
 # get_info()
 insert_test_doc = get_info()
-print(insert_test_doc)
+print(type(insert_test_doc))
 
 connection = pymongo.MongoClient("mongodb://192.168.0.13:27017")
 db = connection.maldb

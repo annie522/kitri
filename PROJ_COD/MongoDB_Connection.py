@@ -15,4 +15,4 @@ def DBConn(dbName):
         db = connection.maldb
     else:
         print("db이름을 확인하세요")
-    return db.users
+    return db

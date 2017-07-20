@@ -129,7 +129,7 @@ if __name__ == "__main__":
     # DB에 저장한 샘플 악성코드 폴더의 악성코드 리스트를 가져옴
     filelist = glob.glob('C:\\TMP2\\*.exe')
     # print(filelist)
-
+    v
     # 가져온 리스트만큼 반복작업 진행
     for i in filelist:
         print(i)

@@ -24,7 +24,7 @@ import sys
 import hashlib
 import re
 import urllib2
-import python-magic
+# import python-magic
 import os
 import socket
 import datetime
@@ -68,14 +68,14 @@ def loadthug():
 
 
 # determine file type for correct archival
-def gettype(file_):
-
-
-# ms = magic.open(magic.MAGIC_NONE)
-    ms = from_buffer(file_)
-# ms.load()
-# return ms.buffer(file)
-    return ms
+# def gettype(file_):
+#
+#
+# # ms = magic.open(magic.MAGIC_NONE)
+#     ms = from_buffer(file_)
+# # ms.load()
+# # return ms.buffer(file)
+#     return ms
 
 
 # beautifulsoup parser
@@ -85,7 +85,8 @@ def parse(url):
     try:
         http = BeautifulSoup(urllib2.urlopen(request), "lxml")
     except:
-        print "- Error parsing %s" % (url)
+        # print "- Error parsing %s" % (url)
+        print("Error")
     return
     return http
 
