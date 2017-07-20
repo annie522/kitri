@@ -146,7 +146,12 @@ def parse_resp(resp):
 main = Virustotal()
 var = main.md5()
 dic = main.rscReport(var)
-print (dic)
+dictected = dic['scans']['Ikarus']['result']
+dictected = 'Trojan.Patched.aaa.bbb'
+dic1 = dictected.split('.')[0]
+dic2 = dictected.split('.')[1]
+dictected = (dic1+'.'+dic2)
+print (dictected)
 # main = Virustotal()
 # var = main.md5('pika.exe')
 # dic = main.rscReport(var)

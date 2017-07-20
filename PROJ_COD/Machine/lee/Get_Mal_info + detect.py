@@ -120,10 +120,10 @@ def get_info():
             api_list.append(exp.name)
     except:
         pass
-    # if(vt.dic['scans']['Ikarus']['detected']=="True"):
+    if(vt.dic['scans']['Ikarus']['detected']=="True"):
 
-    #     insert_test_doc.update({"opcode" : op_list_count, "section_info" : section_name,"ie_api":str(api_list), "detect" : dictected})
-    insert_test_doc.update({"detect": dictected})
+        insert_test_doc.update({"opcode" : op_list_count, "section_info" : section_name,"ie_api":str(api_list), "detect" : dictected})
+    #insert_test_doc.update({"detect": dictected})
 
     print(insert_test_doc)
     return insert_test_doc
@@ -145,8 +145,9 @@ if __name__ == "__main__":
         #print(type(ditection['scans']['Ikarus']['result']))
         if (ditection['scans']['Ikarus']['detected'] == True):
             dictected = ditection['scans']['Ikarus']['result']
-            dictected = dictected.split('.')[0,1]
-            dictected = ''.join(dictected)
+            dic1 = dictected.split('.')[0]
+            dic2 = dictected.split('.')[1]
+            dictected = (dic1 + '.' + dic2)
         else:
             dictected = "test"
 
