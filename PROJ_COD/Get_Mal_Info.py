@@ -4,6 +4,9 @@ import sys
 import pymongo
 import glob
 import re
+import PROJ_COD.Con_Virustotal as vs
+import PROJ_COD.MongoDB_Connection as mg
+import PROJ_COD.Get_File_Hash as fh
 
 """
 작성일   : 2017-07-14(최초작성)
@@ -97,11 +100,9 @@ def get_info():
                     flags.append(flag[0])
         s_name1 = str(section.Name)
         s_name = re.sub(r"[b'|\\x00]", "", s_name1)
-        print(s_name)
         if s_name == '.tet':
             s_name = '_text'
         s_name = s_name.replace(".", "_")
-        print(s_name)
         section_name[s_name] = section.get_entropy()
 
 
@@ -119,7 +120,6 @@ def get_info():
     except:
         pass
     insert_test_doc.update({"opcode" : op_list_count, "section_info" : section_name,"ie_api":str(api_list)})
-    print(insert_test_doc)
     return insert_test_doc
 
 
@@ -131,17 +131,22 @@ if __name__ == "__main__":
 
     # 가져온 리스트만큼 반복작업 진행
     for i in filelist:
-        print(i)
-        get_info()
-
-        insert_test_doc = get_info()
-
-        connection = pymongo.MongoClient("mongodb://203.234.103.169:27017")
-        db = connection.maldb
-        users = db.users
-
-        try:
-            users.insert(insert_test_doc)
-            print("[+] insert success", sys.exc_info()[0])
-        except:
-            print("[-] insert failed",sys.exc_info()[0])
+        print("file_name : ",i)
+        rslt = vs.get_mal_kind(i)
+        print(rslt)
+        users = mg.DBConn("maldb").users
+        if rslt[0]>0:
+            if fh.get_hash_match(i) == False:
+                insert_test_doc = get_info()
+                try:
+                    del insert_test_doc['_id']
+                except:pass
+                insert_test_doc.update({"detect": rslt[1], "hash" : rslt[2]})
+                print("insert_teset_doc : ",insert_test_doc)
+                try:
+                    users.insert(insert_test_doc)
+                    print("[+] insert success", sys.exc_info()[0])
+                except:
+                    print("[-] insert failed",sys.exc_info()[0])
+            else:
+                print("[-] We find matched Hash. You don't need to insert again!")

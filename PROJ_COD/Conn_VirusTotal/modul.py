@@ -6,7 +6,7 @@
 # scan_date
 # scans
 
-__author__ = 'Jacolon Walker'
+# __author__ = 'Jacolon Walker'
 
 import requests
 import json
@@ -19,7 +19,6 @@ class Virustotal():
     def __init__(self):
         self.host = "www.virustotal.com"
         self.base = "https://www.virustotal.com/vtapi/v2/"
-        #self.apikey = "bbc972972f5db6166251b2856d0ac39a8d64da57f7458e3ceae0a8d5ea9be9a4"
         self.apikey = "1debafcb5beab36b14e610bf8b8fdf33a86cd59bffc8413b36c212bf260284b7"
         self.filepath = input("file path :")    #
 
