@@ -8,9 +8,9 @@ import PROJ_COD.Machine.lee.data_helpers as data_helpers
 from PROJ_COD.Machine.lee.text_cnn import TextCNN
 from tensorflow.contrib import learn
 
-connection = pymongo.MongoClient("mongodb://203.234.103.169:27017")
+connection = pymongo.MongoClient("mongodb://203.234.103.169")
 db = connection.maldb   #db 이름 악성코드모아놓은곳
-learning_data = db.users.users #이것도 db 인데 학습시킬애들인가
+learning_data = db.learning_data #이것도 db 인데 학습시킬애들인가
 
 # Parameters
 # ==================================================
@@ -50,7 +50,6 @@ def get_sample_data():
     r_label = []
     detect_and_num = {}
     learn_data = learning_data.find()   #이거도 이름바꾸
-    print(leas)
     for line in learn_data:
         text_val = line["opcode"].keys() + line["ie_api"] + line["section_info"].keys() #opcode, api, section_info 저장
         detect_val = line['detect'].split(".")[0]
@@ -124,7 +123,7 @@ with tf.Graph().as_default():
             l2_reg_lambda=FLAGS.l2_reg_lambda)
 
         # Define Training procedure
-        global_step = tf.Variable(0, name="global_step", trainable=False) # tf.variable()은 tf.variable 클래스를 반환한다.
+        global_step = tf.Variable(0, name="global_step", trainable=False)
         optimizer = tf.train.AdamOptimizer(1e-3)
         grads_and_vars = optimizer.compute_gradients(cnn.loss) # gradient 계산값 구하여 수동 적용  , gradient == 기울기
         train_op = optimizer.apply_gradients(grads_and_vars, global_step=global_step) # grads_and_vars 수정
@@ -213,7 +212,7 @@ with tf.Graph().as_default():
                 predict_list.append(dict_z.keys()[dict_z.values().index(max_dict_z - one_predict)])
 
             for one_batch in y_batch:
-                true_list.append(dict_z.keys()[dict_z.values().index(max_dict_z - one_batch.tolist().index(1))]) # tolist == 쿼리를 즉시 평가하고 반환된 쿼리결과 포함
+                true_list.append(dict_z.keys()[dict_z.values().index(max_dict_z - one_batch.tolist().index(1))])
 
             for num in range(len(predict_list)):
                 if predict_list[num] == true_list[num]:
@@ -221,7 +220,7 @@ with tf.Graph().as_default():
                 else:
                     o_x_list.append("X")
 
-            print("[+] Detection [+]")
+            print("[+] Ahnlab-V3 Detection [+]")
             print(true_list)
             print("")
             print("[+] Machine Detection [+]")
