@@ -1,0 +1,9 @@
+<RCC>
+  <qresource prefix="/new/prefix1">
+    <file>home.png</file>
+    <file>tab.png</file>
+    <file>bg.png</file>
+    <file>iconmonstr-virus-8.png</file>
+    <file>open.png</file>
+  </qresource>
+</RCC>
