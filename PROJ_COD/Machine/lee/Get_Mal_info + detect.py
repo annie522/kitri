@@ -104,7 +104,7 @@ def get_info():
         s_name = s_name.replace(".", "_")
         print(s_name)
         section_name[s_name] = section.get_entropy()
-    vt.rsc
+
 
     pe.parse_data_directories(
         pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_IMPORT'])

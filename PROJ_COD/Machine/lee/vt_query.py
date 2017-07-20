@@ -21,7 +21,7 @@ class Virustotal():
         self.base = "https://www.virustotal.com/vtapi/v2/"
         self.apikey = "bbc972972f5db6166251b2856d0ac39a8d64da57f7458e3ceae0a8d5ea9be9a4"
 
-    def md5(self, filepath, blocksize=8192):
+    def md5(self, filepath='pika.exe', blocksize=8192):
 
         md5 = hashlib.md5()
         try:
@@ -154,4 +154,4 @@ if dic['positives'] >= 10:
     print("VIRUS!!!")
 else:
     print("NOMAL FILE")
-print ("total = " , dic['total'],"positives = " , dic['positives'],dic['detect'])
+print ("total = " , dic['total'],"positives = " , dic['positives'],dic)
