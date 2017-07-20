@@ -50,7 +50,7 @@ def get_sample_data():
     r_label = []
     detect_and_num = {}
     learn_data = learning_data.find()   #이거도 이름바꾸
-    print(leas)
+
     for line in learn_data:
         text_val = line["opcode"].keys() + line["ie_api"] + line["section_info"].keys() #opcode, api, section_info 저장
         detect_val = line['detect'].split(".")[0]
@@ -210,7 +210,7 @@ with tf.Graph().as_default():
             true_list = []
             o_x_list = []
             for one_predict in predictions:
-                predict_list.append(dict_z.keys()[dict_z.values().index(max_dict_z - one_predict)])
+                predict_list.append(dict_z.keys()[dict_z.values().index(max_dict_z - one_predict)]) # 얘가 우리 머신러닝이 예측한 진단명
 
             for one_batch in y_batch:
                 true_list.append(dict_z.keys()[dict_z.values().index(max_dict_z - one_batch.tolist().index(1))]) # tolist == 쿼리를 즉시 평가하고 반환된 쿼리결과 포함

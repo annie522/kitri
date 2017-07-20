@@ -4,9 +4,7 @@ import sys
 import pymongo
 import glob
 import re
-import PROJ_COD.Con_Virustotal as vs
-import PROJ_COD.MongoDB_Connection as mg
-import PROJ_COD.Get_File_Hash as fh
+from kitri.PROJ_COD.Machine.kwon import vt_query as vt
 
 """
 작성일   : 2017-07-14(최초작성)
@@ -76,8 +74,9 @@ def get_info():
     pe = pefile.PE(i)
     op_list_count = {}
     section_name = {}
-    api_list = []
 
+    api_list = []
+    print("get_info 실행 중!!!")
     for section in pe.sections:
         flags = []
         for flag in sorted(section_flags):
@@ -100,9 +99,11 @@ def get_info():
                     flags.append(flag[0])
         s_name1 = str(section.Name)
         s_name = re.sub(r"[b'|\\x00]", "", s_name1)
+        #print(s_name)
         if s_name == '.tet':
             s_name = '.text'
         s_name = s_name.replace(".", "_")
+        #print(s_name)
         section_name[s_name] = section.get_entropy()
 
 
@@ -119,7 +120,11 @@ def get_info():
             api_list.append(exp.name)
     except:
         pass
-    insert_test_doc.update({"opcode" : op_list_count, "section_info" : section_name,"ie_api":str(api_list)})
+    # if(vt.dic['scans']['Ikarus']['detected']=="True"):
+    #     insert_test_doc.update({"opcode" : op_list_count, "section_info" : section_name,"ie_api":str(api_list), "detect" : dictected})
+    insert_test_doc.update({"detect": dictected})
+
+    print(insert_test_doc)
     return insert_test_doc
 
 
@@ -127,26 +132,28 @@ def get_info():
 if __name__ == "__main__":
     # DB에 저장한 샘플 악성코드 폴더의 악성코드 리스트를 가져옴
     filelist = glob.glob('C:\\TMP2\\*.exe')
+
     # print(filelist)
 
     # 가져온 리스트만큼 반복작업 진행
     for i in filelist:
-        print("file_name : ",i)
-        rslt = vs.get_mal_kind(i)
-        print(rslt)
-        users = mg.DBConn("maldb").users
-        if rslt[0]>0:
-            if fh.get_hash_match(i) == False:
-                insert_test_doc = get_info()
-                try:
-                    del insert_test_doc['_id']
-                except:pass
-                insert_test_doc.update({"detect": rslt[1], "hash" : rslt[2]})
-                print("insert_teset_doc : ",insert_test_doc)
-                try:
-                    users.insert(insert_test_doc)
-                    print("[+] insert success", sys.exc_info()[0])
-                except:
-                    print("[-] insert failed",sys.exc_info()[0])
-            else:
-                print("[-] We find matched Hash. You don't need to insert again!")
+        print(i)
+        VirusTotal = vt.Virustotal()
+        md5val = VirusTotal.md5(i)
+        ditection = VirusTotal.rscReport(md5val)
+        #print(type(ditection['scans']['Ikarus']['result']))
+        if (ditection['scans']['Ikarus']['detected'] == True):
+            dictected = ditection['scans']['Ikarus']['result']
+        else:
+            dictected = "test"
+
+        get_info()
+        #insert_test_doc = get_info()
+        connection = pymongo.MongoClient("mongodb://203.234.103.169:27017")
+        db = connection.maldb
+        users = db.users
+        try:
+            users.insert(insert_test_doc)
+            print("[+] insert success", sys.exc_info()[0])
+        except:
+            print("[-] insert failed",sys.exc_info()[0])
