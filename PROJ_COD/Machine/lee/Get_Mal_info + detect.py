@@ -4,7 +4,7 @@ import sys
 import pymongo
 import glob
 import re
-import PROJ_COD.Machine.lee.vt_query as vt
+from PROJ_COD.Machine.lee import vt_query as vt
 
 """
 작성일   : 2017-07-14(최초작성)
@@ -74,8 +74,9 @@ def get_info():
     pe = pefile.PE(i)
     op_list_count = {}
     section_name = {}
-    api_list = []
 
+    api_list = []
+    print("get_info 실행 중!!!")
     for section in pe.sections:
         flags = []
         for flag in sorted(section_flags):
@@ -98,11 +99,11 @@ def get_info():
                     flags.append(flag[0])
         s_name1 = str(section.Name)
         s_name = re.sub(r"[b'|\\x00]", "", s_name1)
-        print(s_name)
+        #print(s_name)
         if s_name == '.tet':
             s_name = '.text'
         s_name = s_name.replace(".", "_")
-        print(s_name)
+        #print(s_name)
         section_name[s_name] = section.get_entropy()
 
 
@@ -119,7 +120,11 @@ def get_info():
             api_list.append(exp.name)
     except:
         pass
-    insert_test_doc.update({"opcode" : op_list_count, "section_info" : section_name,"ie_api":str(api_list)})
+    # if(vt.dic['scans']['Ikarus']['detected']=="True"):
+
+    #     insert_test_doc.update({"opcode" : op_list_count, "section_info" : section_name,"ie_api":str(api_list), "detect" : dictected})
+    insert_test_doc.update({"detect": dictected})
+
     print(insert_test_doc)
     return insert_test_doc
 
@@ -128,19 +133,28 @@ def get_info():
 if __name__ == "__main__":
     # DB에 저장한 샘플 악성코드 폴더의 악성코드 리스트를 가져옴
     filelist = glob.glob('C:\\TMP2\\*.exe')
+
     # print(filelist)
-    v
+
     # 가져온 리스트만큼 반복작업 진행
     for i in filelist:
         print(i)
+        VirusTotal = vt.Virustotal()
+        md5val = VirusTotal.md5(i)
+        ditection = VirusTotal.rscReport(md5val)
+        #print(type(ditection['scans']['Ikarus']['result']))
+        if (ditection['scans']['Ikarus']['detected'] == True):
+            dictected = ditection['scans']['Ikarus']['result']
+            dictected = dictected.split()[0,1]
+            dictected = ''.join(dictected)
+        else:
+            dictected = "test"
+
         get_info()
-
-        insert_test_doc = get_info()
-
+        #insert_test_doc = get_info()
         connection = pymongo.MongoClient("mongodb://203.234.103.169:27017")
         db = connection.maldb
         users = db.users
-
         try:
             users.insert(insert_test_doc)
             print("[+] insert success", sys.exc_info()[0])

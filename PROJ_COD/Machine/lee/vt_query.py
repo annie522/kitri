@@ -21,8 +21,8 @@ class Virustotal():
         self.base = "https://www.virustotal.com/vtapi/v2/"
         self.apikey = "bbc972972f5db6166251b2856d0ac39a8d64da57f7458e3ceae0a8d5ea9be9a4"
 
-    def md5(self, filepath='pika.exe', blocksize=8192):
-
+    def md5(self ,filepath="pika.exe",  blocksize=8192):
+        #print("dddd  :" +filepath)
         md5 = hashlib.md5()
         try:
             f = open(filepath, "rb")
@@ -143,15 +143,17 @@ def parse_resp(resp):
         buf[item] = resp[item]
 
     return buf
-
 main = Virustotal()
-print (main.md5())
 var = main.md5()
 dic = main.rscReport(var)
+print (dic)
+# main = Virustotal()
+# var = main.md5('pika.exe')
+# dic = main.rscReport(var)
 # dic = (main.rscReport(var))
 #
-if dic['positives'] >= 10:
-    print("VIRUS!!!")
-else:
-    print("NOMAL FILE")
-print ("total = " , dic['total'],"positives = " , dic['positives'],dic)
+# if dic['positives'] >= 10:
+#     print("VIRUS!!!")
+# else:
+#     print("NOMAL FILE")
+# print ("total = " , dic['total'],"positives = " , dic['positives'], dic['scans']['Ikarus']['detected'], dic['scans']['Ikarus']['result'])
