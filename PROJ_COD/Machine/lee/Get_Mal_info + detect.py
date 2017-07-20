@@ -145,7 +145,7 @@ if __name__ == "__main__":
         #print(type(ditection['scans']['Ikarus']['result']))
         if (ditection['scans']['Ikarus']['detected'] == True):
             dictected = ditection['scans']['Ikarus']['result']
-            dictected = dictected.split()[0,1]
+            dictected = dictected.split('.')[0,1]
             dictected = ''.join(dictected)
         else:
             dictected = "test"
