@@ -6,11 +6,15 @@ import random, re
 csv = []
 result = []
 opcode_data = mongoDB.DBConn("shutdown").opcode_data
-all_data = opcode_data.find({},{"_id":0,"$exists":})
+all_data = opcode_data.find({},{"_id":0})
+# all_data = opcode_data.find()
 
 for line in all_data:
-    print("line : ", line.values())
-    print(test)
+    print("line : ", line)
+    if "MOVDQU" in line.keys():
+        ababab = str(line).find("MOVDQU")
+        print(ababab)
+        print("11111111111111111111111111111111111")
 with open("iris.csv","r",encoding="utf-8") as fp:
     # 한 줄씩 읽어 들이기
     for line in fp:
