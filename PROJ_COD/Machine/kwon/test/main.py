@@ -1,7 +1,10 @@
-import kitri.PROJ_COD.Machine.kim.Get_File_Hash as filehash
-import kitri.PROJ_COD.Machine.kim.Con_Virustotal as conVirustotal
-import kitri.PROJ_COD.Machine.kim.Get_Mal_Info as malInfo
-import kitri.PROJ_COD.Machine.kim.Get_Opcode_Info as opInfo
+import kitri.PROJ_COD.Machine.kwon.test.Con_Virustotal as filehash
+import kitri.PROJ_COD.Machine.kwon.test.Get_File_Hash as filehas
+import kitri.PROJ_COD.Machine.kwon.test.Con_Virustotal as filehash
+# from PROJ_COD.Machine.kwon.test import Get_File_Hash as filehash
+# from PROJ_COD.Machine.kwon.test import Con_Virustotal as conVirustotal
+from kitri.PROJ_COD.Machine.kwon.test import Get_Mal_Info as malInfo
+from kitri.PROJ_COD.Machine.kwon.test import Get_Opcode_Info as opInfo
 import kitri.PROJ_COD.MongoDB_Connection as mongoDB
 import glob
 if __name__ == '__main__':
