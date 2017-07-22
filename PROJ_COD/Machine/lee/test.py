@@ -9,9 +9,10 @@ from PROJ_COD.Machine.lee.text_cnn import TextCNN
 from tensorflow.contrib import learn
 
 connection = pymongo.MongoClient("mongodb://203.234.103.169:27017")
-db = connection.maldb   #db 이름 악성코드모아놓은곳
-learning_data = db.users.users #이것도 db 인데 학습시킬애들인가
-
+# db name
+db = connection.maldb
+# collection name
+learning_data = db.ttt
 # Parameters
 # ==================================================
 
@@ -33,10 +34,10 @@ tf.flags.DEFINE_boolean("log_device_placement", False, "Log placement of ops on 
 
 FLAGS = tf.flags.FLAGS
 FLAGS._parse_flags()
-print("\nParameters:")
-for attr, value in sorted(FLAGS.__flags.items()):
-    print("{}={}".format(attr.upper(), value))
-print("")
+#print("\nParameters:")
+#for attr, value in sorted(FLAGS.__flags.items()):
+#    print("{}={}".format(attr.upper(), value))
+#print("")
 # flags 얘네들은 뭐 그냥 define 이라고 생각하면 됨
 
 # Data Preparatopn
@@ -49,39 +50,51 @@ def get_sample_data():
     label = []
     r_label = []
     detect_and_num = {}
-    learn_data = learning_data.find()   #이거도 이름바꾸
-
+    learn_data = learning_data.find()
     for line in learn_data:
-        text_val = line["opcode"].keys() + line["ie_api"] + line["section_info"].keys() #opcode, api, section_info 저장
-        detect_val = line['detect'].split(".")[0]
+#         text_val = str(line["opcode"].keys()) + line["ie_api"] + str(line["section_info"].keys())# + line["section_info"].keys()  # opcode, api, section_info 저장
+#         print(text_val)
+# get_sample_data()
+        # opcode, api, section_info 저장
+        text_val = str(line["opcode"].keys()) + line["ie_api"] + str(line["section_info"].keys())
+        detect_val = line['detect']#.split(".")[0]
         # detect_val = line['detect']
-        text.append(" ".join(str(e) for e in text_val)) #text에 아까 불러왔던애들 저장
+        #text에 아까 불러왔던애들 저장
+        text.append(" ".join(str(e) for e in text_val))
 
         if len(detect_and_num) == 0:
-            detect_and_num[detect_val] = 1 # detect_and_num[바이러스이름 = 1  을 뜻하는듯
+            detect_and_num[detect_val] = 1 # detect_and_num[바이러스이름] = 1  을 뜻하는듯
 
         if detect_val not in detect_and_num.keys(): # 바이러스이름이 keys 에 없으면
             current_max = detect_and_num[max(detect_and_num, key=detect_and_num.get)] # 만들고 추가하고
-            detect_and_num[detect_val] = current_max + 1    # 값 하나 올리고
-
-        label.append(detect_and_num[detect_val])  #label에 저장하네 위에서 구한결과
-
+           # 값 하나 올리고
+            detect_and_num[detect_val] = current_max + 1
+        #label에 저장하네 위에서 구한결과
+        label.append(detect_and_num[detect_val])
+        print ("label :",label)                     #############t
+        print("detect_and_num :",detect_and_num)    ##############t
     max_num = max(label)  #그 후 max값 변경.
     for l_num in label:
         lst = [0 for _ in range(max_num)]
         lst[-l_num] = 1
         r_label.append(lst)  #lst 범위 max_num까지 다 1로 바꾸고 r_label에 저장
-
+        print("l_num: ",l_num)              ################t
     r_label = np.array(r_label)
+    print("r_label :",r_label)              #############t
     return text, r_label, detect_and_num # text=opcode,api,section_info , r_label= 악성코드종류갯수? detect_and_num = 탐지갯수 같은데
-
 
 print("Loading data...")
 x_text, y, dict_z = get_sample_data() # x_text = text , y = r_label , dict_z = detect_and_num
-
+print("x_text: ",x_text)        ###########t
+print("dict_z :", dict_z)           ##########t
+dict_z_k = list(dict_z.keys())
+dict_z_v = list(dict_z.values())
+#print (dict_z.keys())
 # Build vocabulary
 max_document_length = max([len(x.split(" ")) for x in x_text]) # 길이를 왜 구하지
+print("max_doc_length: ",max_document_length)####t
 vocab_processor = learn.preprocessing.VocabularyProcessor(max_document_length) # 길이가 다른 문서를 max_document_length로 맞춰주는 역할
+print("vocab_processor: ",vocab_processor)####t
 x = np.array(list(vocab_processor.fit_transform(x_text))) # x = x_text 마다 단어를 숫자순서로 바꿔서 숫자로 순서 나열해놓은거
 
 # Randomly shuffle data
@@ -89,7 +102,10 @@ np.random.seed(10)
 shuffle_indices = np.random.permutation(np.arange(len(y)))
 x_shuffled = x[shuffle_indices]
 y_shuffled = y[shuffle_indices] # 0부터 y 길이까지 데이터를 섞는다.
-
+print("x: ",x)####t
+print("y: ",y)####t
+print("x_shuffled :",x_shuffled)####t
+print("y_shuffled :",y_shuffled)####t
 # Split train/test set
 # TODO: This is very crude, should use cross-validation
 cut = int(len(x_shuffled) * 0.90) # x_shuffled 길이 * 0.9 = cut
@@ -133,11 +149,11 @@ with tf.Graph().as_default():
         grad_summaries = []
         for g, v in grads_and_vars:
             if g is not None: #  그래프 정의시 필요한 scalar 값마다 summary
-                grad_hist_summary = tf.histogram_summary("{}/grad/hist".format(v.name), g) # histogram == 학습과정 시각화때 사용할 데이터 직렬화하기위한 메소드
-                sparsity_summary = tf.scalar_summary("{}/grad/sparsity".format(v.name), tf.nn.zero_fraction(g)) # scalar == 학습과정을 시각화할 때 사용할 데이터를 직렬화 하기위한 메소드
+                grad_hist_summary = tf.summary.histogram("{}/grad/hist".format(v.name), g) # histogram == 학습과정 시각화때 사용할 데이터 직렬화하기위한 메소드
+                sparsity_summary = tf.summary.scalar("{}/grad/sparsity".format(v.name), tf.nn.zero_fraction(g)) # scalar == 학습과정을 시각화할 때 사용할 데이터를 직렬화 하기위한 메소드
                 grad_summaries.append(grad_hist_summary)
                 grad_summaries.append(sparsity_summary)
-        grad_summaries_merged = tf.merge_summary(grad_summaries) # histogram, scalar 통합.
+        grad_summaries_merged = tf.summary.merge(grad_summaries) # histogram, scalar 통합.
 
         # Output directory for models and summaries
         timestamp = str(int(time.time())) # 시간을 초 단위로 부동소수점 숫자로 변환
@@ -145,18 +161,18 @@ with tf.Graph().as_default():
         print("Writing to {}\n".format(out_dir)) # runs디렉토리 경로 print
 
         # Summaries for loss and accuracy
-        loss_summary = tf.scalar_summary("loss", cnn.loss) # scalar 로 변수를 요약 "loss" "accuracy" 이런건 태그라고 함
-        acc_summary = tf.scalar_summary("accuracy", cnn.accuracy)
+        loss_summary = tf.summary.scalar("loss", cnn.loss) # scalar 로 변수를 요약 "loss" "accuracy" 이런건 태그라고 함
+        acc_summary = tf.summary.scalar("accuracy", cnn.accuracy)
 
         # Train Summaries
-        train_summary_op = tf.merge_summary([loss_summary, acc_summary, grad_summaries_merged]) # summary 통합
+        train_summary_op = tf.summary.merge([loss_summary, acc_summary, grad_summaries_merged]) # summary 통합
         train_summary_dir = os.path.join(out_dir, "summaries", "train") # session 생성
-        train_summary_writer = tf.train.SummaryWriter(train_summary_dir, sess.graph) # summarywriter 정의
+        train_summary_writer = tf.summary.FileWriter(train_summary_dir, sess.graph) # summarywriter 정의
 
         # Dev summaries
-        dev_summary_op = tf.merge_summary([loss_summary, acc_summary])
+        dev_summary_op = tf.summary.merge([loss_summary, acc_summary])
         dev_summary_dir = os.path.join(out_dir, "summaries", "dev")
-        dev_summary_writer = tf.train.SummaryWriter(dev_summary_dir, sess.graph)
+        dev_summary_writer = tf.summary.FileWriter(dev_summary_dir, sess.graph)
 
         # Checkpoint directory. Tensorflow assumes this directory already exists so we need to create it
         checkpoint_dir = os.path.abspath(os.path.join(out_dir, "checkpoints")) #
@@ -174,7 +190,7 @@ with tf.Graph().as_default():
 
         def train_step(x_batch, y_batch):
             """
-            A single training step
+            #A single training step
             """
             feed_dict = {
                 cnn.input_x: x_batch,
@@ -191,7 +207,7 @@ with tf.Graph().as_default():
 
         def dev_step(x_batch, y_batch, writer=None):
             """
-            Evaluates model on a dev set
+            #Evaluates model on a dev set
             """
             feed_dict = {
                 cnn.input_x: x_batch,
@@ -206,25 +222,40 @@ with tf.Graph().as_default():
 
             # compare data
             max_dict_z = dict_z[max(dict_z, key=lambda i: dict_z[i])]
+            print("max_dict_z :", max_dict_z)           ###########t
             predict_list = []
             true_list = []
             o_x_list = []
+            dict_z_k = list(dict_z.keys())
+            dict_z_v = list(dict_z.values())
             for one_predict in predictions:
-                predict_list.append(dict_z.keys()[dict_z.values().index(max_dict_z - one_predict)]) # 얘가 우리 머신러닝이 예측한 진단명
-
+                print("pre :",predictions)  ###########t
+#                predict_list.append(dict_z.keys()[dict_z.values().index(max_dict_z - one_predict)]) # 얘가 우리 머신러닝이 예측한 진단명
+                #우리 머신러닝이 예측한 진단명
+                predict_list.append(dict_z_k[dict_z_v.index(max_dict_z - one_predict)])
+                print("1one: ",one_predict)####t
+                print("1z_k: ",dict_z_k)####t
+                print("1z_v: ",dict_z_v)####t
+                print("1max-dict_z: ",max_dict_z)####t
             for one_batch in y_batch:
-                true_list.append(dict_z.keys()[dict_z.values().index(max_dict_z - one_batch.tolist().index(1))]) # tolist == 쿼리를 즉시 평가하고 반환된 쿼리결과 포함
-
+                print("y_batch :",y_batch)####t
+#                true_list.append(dict_z.keys()[dict_z.values().index(max_dict_z - one_batch.tolist().index(1))]) # tolist == 쿼리를 즉시 평가하고 반환된 쿼리결과 포함
+                # tolist == 쿼리를 즉시 평가하고 반환된 쿼리결과 포함
+                true_list.append(dict_z_k[dict_z_v.index(max_dict_z - one_batch.tolist().index(1))])  # tolist == 쿼리를 즉시 평가하고 반환된 쿼리결과 포함
+                print("2one: ", one_batch)####t
+                print("2z_k: ", dict_z_k)####t
+                print("2z_v: ", dict_z_v)####t
+                print("2max-dict_z: ", max_dict_z)####t
             for num in range(len(predict_list)):
                 if predict_list[num] == true_list[num]:
                     o_x_list.append("O")
                 else:
                     o_x_list.append("X")
 
-            print("[+] Detection [+]")
+            print("[+] Kaspersky Detection [+]")
             print(true_list)
             print("")
-            print("[+] Machine Detection [+]")
+            print("[+] Shutdown Machine Detection [+]")
             print(predict_list)
             print("")
             print(o_x_list)
