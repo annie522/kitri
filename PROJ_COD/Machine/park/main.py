@@ -416,7 +416,7 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
+        Form.setWindowTitle(_translate("Form", "Malware Machine Detector"))
         self.label.setText(_translate("Form", "선택 파일 없음"))
         self.fileOPEN.setText(_translate("Form", "파일 선택"))
         self.toolButton.setText(_translate("Form", "검사시작 !"))
