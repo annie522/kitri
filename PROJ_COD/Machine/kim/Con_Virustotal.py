@@ -9,7 +9,7 @@ import sys
 버전     : v1.0(수정시 버전 올려주세요)
 프로그램 : 
 """
-
+#바이러스 토탈 클래스
 class Virustotal():
     """ Virustotal API module """
 
@@ -17,14 +17,14 @@ class Virustotal():
         self.host = "www.virustotal.com"
         self.base = "https://www.virustotal.com/vtapi/v2/"
         self.apikey = ""
-        # self.filepath = input("file path :")    #
 
 
+    #MD5 값 가져오기(바이러스 토탈이 아니라 로컬에서 가져오는 파일)
     def md5(self,i, blocksize=8192):
         md5 = hashlib.md5()
         try:
             f = open(i, "rb")
-            # f = open("C:\\Users\kitri\PycharmProjects\shutdown\PROJ_COD\pika.exe", "rb")
+
         except IOError as e:
             print("[+] file open error", e)
             return
@@ -36,7 +36,7 @@ class Virustotal():
         return md5.hexdigest()
 
 
-
+    #바이러스 토탈에 정보를 넘겨서 바이러스 토탈의 Report 값 가져오기
     def rscReport(self,filemd5):
         """ Get latest report of resource """
         try:
@@ -198,14 +198,17 @@ def parse_resp(resp):
     then returns the data back to the function """
     buf = {}
     for item in resp:
+        print("parse :", buf[item], "ok : ", resp[item])
         buf[item] = resp[item]
 
     return buf
-
+#바이러스 토탈에게 요청해서 받은 정보 중 악성코드 진단한 밴더 수, 악성코드 종류,  MD5 3개의 값을 리턴해준다.
 def get_mal_kind(fileName):
     main = Virustotal()
     var = main.md5(fileName)
+    print(var)
     dic = main.rscReport(var)
+    print(dic)
     try:
         if dic['positives'] > 10:
             for key, value in dic['scans'].items():
@@ -216,3 +219,19 @@ def get_mal_kind(fileName):
     except:
         print("[+] dic['positives'] DOES NOT EXIST.")
         return 0, None, None
+get_mal_kind("C:\\TMP2\\wLoader.exe")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
