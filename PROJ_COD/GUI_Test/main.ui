@@ -26,9 +26,9 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>139</y>
+     <y>159</y>
      <width>711</width>
-     <height>381</height>
+     <height>361</height>
     </rect>
    </property>
    <property name="minimumSize">
@@ -52,7 +52,7 @@
    <property name="font">
     <font>
      <family>나눔고딕</family>
-     <pointsize>12</pointsize>
+     <pointsize>10</pointsize>
      <weight>50</weight>
      <bold>false</bold>
     </font>
@@ -97,28 +97,31 @@
     <attribute name="title">
      <string>파일선택</string>
     </attribute>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="selected_file">
      <property name="geometry">
       <rect>
        <x>80</x>
-       <y>80</y>
-       <width>460</width>
+       <y>60</y>
+       <width>421</width>
        <height>31</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <family>나눔고딕</family>
-       <pointsize>10</pointsize>
+       <family>Agency FB</family>
+       <pointsize>9</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
       </font>
      </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="styleSheet">
-      <string notr="true">border: 1px solid rgb(58, 58, 58);
+      <string notr="true">border: 1px solid rgb(200, 200, 200);
 border-top-left-radius:5px;
-border-bottom-left-radius: 5px;</string>
+border-bottom-left-radius: 5px;
+border-right:0px;</string>
      </property>
      <property name="text">
       <string>선택 파일 없음</string>
@@ -127,29 +130,33 @@ border-bottom-left-radius: 5px;</string>
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QToolButton" name="fileOPEN">
+    <widget class="QToolButton" name="fileopenBtn">
      <property name="geometry">
       <rect>
-       <x>540</x>
-       <y>80</y>
-       <width>90</width>
+       <x>499</x>
+       <y>60</y>
+       <width>131</width>
        <height>31</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <family>나눔고딕</family>
-       <pointsize>10</pointsize>
+       <family>Agency FB</family>
+       <pointsize>9</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
       </font>
      </property>
      <property name="cursor">
       <cursorShape>PointingHandCursor</cursorShape>
      </property>
      <property name="styleSheet">
-      <string notr="true">border: 1px solid rgb(58, 58, 58);
+      <string notr="true">border: 1px solid rgb(200, 200, 200);
 border-top-right-radius:5px;
 border-bottom-right-radius: 5px;
-background-color: rgb(223, 223, 223);</string>
+background-color: rgb(223, 223, 223);
+font-weight:bold;
+</string>
      </property>
      <property name="text">
       <string>파일 선택</string>
@@ -166,8 +173,8 @@ background-color: rgb(223, 223, 223);</string>
      </property>
      <property name="font">
       <font>
-       <family>나눔고딕</family>
-       <pointsize>20</pointsize>
+       <family>맑은 고딕</family>
+       <pointsize>12</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -176,11 +183,40 @@ background-color: rgb(223, 223, 223);</string>
       <cursorShape>PointingHandCursor</cursorShape>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(25, 59, 255);
-color: rgb(223, 223, 223);</string>
+      <string notr="true">background-color: #0F75BD;
+color: white;border:nono;</string>
      </property>
      <property name="text">
-      <string>검사시작 !</string>
+      <string>검사시작</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_23">
+     <property name="geometry">
+      <rect>
+       <x>-10</x>
+       <y>110</y>
+       <width>731</width>
+       <height>91</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>나눔고딕</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;
+&lt;p align=&quot;center&quot; style='line-height:50%;'&gt;검사시작 버튼을 클릭함으로써 검사가 시작되며,&lt;/p&gt;
+&lt;p align=&quot;center&quot; style='line-height:50%;'&gt;이 파일을 온라인 보안 커뮤니티에 공유하는 것을&lt;/p&gt;
+&lt;p align=&quot;center&quot; style='line-height:50%;'&gt;허용함을 뜻합니다. 자세한 내용은 관리자에게 문의바랍니다.&lt;/p&gt;
+&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </widget>
@@ -315,7 +351,7 @@ color: rgb(223, 223, 223);</string>
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>681</width>
+       <width>571</width>
        <height>121</height>
       </rect>
      </property>
@@ -325,7 +361,7 @@ color: rgb(223, 223, 223);</string>
       <rect>
        <x>20</x>
        <y>20</y>
-       <width>61</width>
+       <width>81</width>
        <height>16</height>
       </rect>
      </property>
@@ -344,7 +380,7 @@ color: rgb(223, 223, 223);</string>
       <rect>
        <x>20</x>
        <y>40</y>
-       <width>61</width>
+       <width>81</width>
        <height>16</height>
       </rect>
      </property>
@@ -363,7 +399,7 @@ color: rgb(223, 223, 223);</string>
       <rect>
        <x>20</x>
        <y>80</y>
-       <width>61</width>
+       <width>91</width>
        <height>16</height>
       </rect>
      </property>
@@ -382,7 +418,7 @@ color: rgb(223, 223, 223);</string>
       <rect>
        <x>20</x>
        <y>60</y>
-       <width>61</width>
+       <width>91</width>
        <height>16</height>
       </rect>
      </property>
@@ -393,7 +429,7 @@ color: rgb(223, 223, 223);</string>
       </font>
      </property>
      <property name="text">
-      <string>MD5       :</string>
+      <string>MD5         :</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_8">
@@ -401,7 +437,7 @@ color: rgb(223, 223, 223);</string>
       <rect>
        <x>20</x>
        <y>100</y>
-       <width>81</width>
+       <width>111</width>
        <height>16</height>
       </rect>
      </property>
@@ -420,7 +456,7 @@ color: rgb(223, 223, 223);</string>
       <rect>
        <x>10</x>
        <y>140</y>
-       <width>681</width>
+       <width>571</width>
        <height>141</height>
       </rect>
      </property>
@@ -428,10 +464,10 @@ color: rgb(223, 223, 223);</string>
     <widget class="QLabel" name="label_9">
      <property name="geometry">
       <rect>
-       <x>90</x>
+       <x>110</x>
        <y>20</y>
-       <width>361</width>
-       <height>16</height>
+       <width>341</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="text">
@@ -441,10 +477,10 @@ color: rgb(223, 223, 223);</string>
     <widget class="QLabel" name="label_19">
      <property name="geometry">
       <rect>
-       <x>90</x>
+       <x>120</x>
        <y>40</y>
-       <width>361</width>
-       <height>16</height>
+       <width>331</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="text">
@@ -454,10 +490,10 @@ color: rgb(223, 223, 223);</string>
     <widget class="QLabel" name="label_20">
      <property name="geometry">
       <rect>
-       <x>90</x>
+       <x>110</x>
        <y>60</y>
-       <width>361</width>
-       <height>16</height>
+       <width>341</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="text">
@@ -467,10 +503,10 @@ color: rgb(223, 223, 223);</string>
     <widget class="QLabel" name="label_21">
      <property name="geometry">
       <rect>
-       <x>90</x>
+       <x>110</x>
        <y>80</y>
-       <width>361</width>
-       <height>16</height>
+       <width>341</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="text">
@@ -480,10 +516,10 @@ color: rgb(223, 223, 223);</string>
     <widget class="QLabel" name="label_22">
      <property name="geometry">
       <rect>
-       <x>90</x>
+       <x>120</x>
        <y>100</y>
-       <width>361</width>
-       <height>16</height>
+       <width>331</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="text">
@@ -503,7 +539,7 @@ color: rgb(223, 223, 223);</string>
       <rect>
        <x>0</x>
        <y>10</y>
-       <width>701</width>
+       <width>581</width>
        <height>251</height>
       </rect>
      </property>
@@ -1007,29 +1043,29 @@ border-bottom-right-radius: 5px;</string>
     </widget>
    </widget>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="title">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>0</x>
      <y>20</y>
-     <width>711</width>
-     <height>41</height>
+     <width>731</width>
+     <height>61</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <family>Adobe 고딕 Std B</family>
+     <family>Arial Black</family>
      <pointsize>30</pointsize>
-     <weight>9</weight>
+     <weight>12</weight>
      <italic>false</italic>
      <bold>false</bold>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 75 30pt &quot;Adobe 고딕 Std B&quot;;</string>
+    <string notr="true">font: 100 30pt;</string>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;MalwareMachine&lt;span style=&quot; color:#193bff;&quot;&gt;Detector&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;EM&lt;/span&gt;&lt;span style=&quot;color:#0F75BD;&quot;&gt;DETECTOR&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
@@ -1038,10 +1074,10 @@ border-bottom-right-radius: 5px;</string>
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>70</y>
-     <width>421</width>
-     <height>61</height>
+     <x>0</x>
+     <y>90</y>
+     <width>731</width>
+     <height>51</height>
     </rect>
    </property>
    <property name="font">
@@ -1054,7 +1090,7 @@ border-bottom-right-radius: 5px;</string>
     <string notr="true"/>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;&lt;div style='line-height:50%;'&gt;Malware Machine Detector는 의심스러운 파일을 분석하고&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;악성코드를 머신러닝기반으로 탐지할수있는 서비스 입니다&lt;/span&gt;&lt;/div&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;&lt;div style='line-height:50%;'&gt;EMDetector는 &lt;span style=&quot; font-weight: bold; color:#0F75BD&quot;&gt;의심스러운 파일&lt;/span&gt;을 분석하고&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;악성코드를 &lt;span style=&quot; font-weight: bold; color:#0F75BD&quot;&gt;머신러닝&lt;/span&gt;기반으로 탐지할수있는 서비스 입니다&lt;/span&gt;&lt;/div&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
@@ -1064,23 +1100,41 @@ border-bottom-right-radius: 5px;</string>
  <resources/>
  <connections>
   <connection>
-   <sender>fileOPEN</sender>
+   <sender>fileopenBtn</sender>
    <signal>clicked()</signal>
    <receiver>Form</receiver>
-   <slot>clickBtn1()</slot>
+   <slot>fileopenBtnClick()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>589</x>
-     <y>268</y>
+     <x>594</x>
+     <y>255</y>
     </hint>
     <hint type="destinationlabel">
-     <x>533</x>
-     <y>77</y>
+     <x>677</x>
+     <y>81</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>startFileDetectionBtnClick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>403</x>
+     <y>428</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>622</x>
+     <y>87</y>
     </hint>
    </hints>
   </connection>
  </connections>
  <slots>
-  <slot>clickBtn1()</slot>
+  <slot>fileopenBtnClick()</slot>
+  <slot>slot1()</slot>
+  <slot>startFileDetectionBtnClick()</slot>
  </slots>
 </ui>
