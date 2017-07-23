@@ -117,6 +117,11 @@ print("Label Size: {:d}".format(len(dict_z))) # dict_z == detect_and_num   파�
 print("Vocabulary Size: {:d}".format(len(vocab_processor.vocabulary_))) # 단어사전의 길이인듯
 print("Train/Dev split: {:d}/{:d}".format(len(y_train), len(y_dev))) #
 # data set make end
+print("x_train: ",x_train)####t
+print("x_train.shape[1]: ",x_train.shape[1])####t
+
+print("y_train: ",x_train)####t
+print("y_train.shape[1]: ",y_train.shape[1])####t
 
 
 
@@ -130,6 +135,7 @@ with tf.Graph().as_default():
         log_device_placement=FLAGS.log_device_placement)
     sess = tf.Session(config=session_conf)
     with sess.as_default():
+
         cnn = TextCNN(
             sequence_length=x_train.shape[1],
             num_classes=y_train.shape[1],
@@ -138,7 +144,6 @@ with tf.Graph().as_default():
             filter_sizes=list(map(int, FLAGS.filter_sizes.split(","))),
             num_filters=FLAGS.num_filters,
             l2_reg_lambda=FLAGS.l2_reg_lambda)
-
         # Define Training procedure
         global_step = tf.Variable(0, name="global_step", trainable=False) # tf.variable()은 tf.variable 클래스를 반환한다.
         optimizer = tf.train.AdamOptimizer(1e-3)
@@ -214,6 +219,17 @@ with tf.Graph().as_default():
                 cnn.input_y: y_batch,
                 cnn.dropout_keep_prob: 1.0
             }
+            print("dropout >   ",cnn.dropout_keep_prob)
+            print("input_x>>> :",cnn.input_x)
+            print("input_y >> :" ,cnn.input_y)
+            print("w",cnn.W)
+            print("embedded   ",cnn.embedded_chars)
+            print("embedded_e   ",cnn.embedded_chars_expanded)
+            print("h_pool",cnn.h_pool)
+            print("h_pool_flat",cnn.h_pool_flat)
+            print("h_drop >>>>>>",cnn.h_drop)
+            print("scores >>>>>>>>>",cnn.scores)
+            print("cnn.predictions ======> ", cnn.predictions)
             step, summaries, loss, accuracy, predictions = sess.run(
                 [global_step, dev_summary_op, cnn.loss, cnn.accuracy, cnn.predictions],
                 feed_dict)
