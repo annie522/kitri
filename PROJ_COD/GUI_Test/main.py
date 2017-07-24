@@ -18,6 +18,7 @@ class Form(QtWidgets.QDialog):
         self.ui = uic.loadUi("main.ui",self)
         self.ui.show()
         Form.selectLog(self)
+        self.ui.numberCountLabel.setPixmap(QPixmap("그림4.jpg"))
 
     @pyqtSlot()
     def fileopenBtnClick(self):
@@ -49,10 +50,11 @@ class Form(QtWidgets.QDialog):
             self.ui.delFileBtn.setEnabled(True)
             self.ui.delFileBtn.setStyleSheet("background-color: #0F75BD;color: white;border:nono;")
         #### 진행 결과에 따라 하단 라벨 이미지 변경
-        numberCount = "level1"
-        if numberCount == "level1": changeImage = QPixmap("그림1.jpg")
-        elif numberCount == "level2": changeImage = QPixmap("그림2.jpg")
-        elif numberCount == "level3": changeImage = QPixmap("그림3.jpg")
+        numberCount = "0"
+        if numberCount == "1": changeImage = QPixmap("그림1.jpg")
+        elif numberCount == "2": changeImage = QPixmap("그림2.jpg")
+        elif numberCount == "3": changeImage = QPixmap("그림3.jpg")
+        elif numberCount == "0": changeImage = QPixmap("그림4.jpg")
         self.ui.numberCountLabel.setPixmap(changeImage)
 
         #########################################################################################

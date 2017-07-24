@@ -1,8 +1,8 @@
-import kitri.PROJ_COD.Machine.kim.Get_File_Hash as filehash
-import kitri.PROJ_COD.Machine.kim.Con_Virustotal as conVirustotal
-import kitri.PROJ_COD.Machine.kim.Get_Mal_Info as malInfo
-import kitri.PROJ_COD.Machine.kim.Get_Opcode_Info as opInfo
-import kitri.PROJ_COD.MongoDB_Connection as mongoDB
+import PROJ_COD.Machine.kim.Get_File_Hash as filehash
+import PROJ_COD.Machine.kim.Con_Virustotal as conVirustotal
+import PROJ_COD.Machine.kim.Get_Mal_Info as malInfo
+import PROJ_COD.Machine.kim.Get_Opcode_Info as opInfo
+import PROJ_COD.MongoDB_Connection as mongoDB
 import glob
 
 def detectionMain(filePath):
