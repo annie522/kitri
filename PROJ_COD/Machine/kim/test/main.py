@@ -1,8 +1,8 @@
-import kitri.PROJ_COD.Machine.kim.Get_File_Hash as filehash
-import kitri.PROJ_COD.Machine.kim.Con_Virustotal as conVirustotal
-import kitri.PROJ_COD.Machine.kim.Get_Mal_Info as malInfo
-import kitri.PROJ_COD.Machine.kim.Get_Opcode_Info as opInfo
-import kitri.PROJ_COD.MongoDB_Connection as mongoDB
+import PROJ_COD.Machine.kim.Get_File_Hash as filehash
+import PROJ_COD.Machine.kim.Con_Virustotal as conVirustotal
+import PROJ_COD.Machine.kim.Get_Mal_Info as malInfo
+import PROJ_COD.Machine.kim.Get_Opcode_Info as opInfo
+import PROJ_COD.MongoDB_Connection as mongoDB
 import glob
 if __name__ == '__main__':
     # 악성코드 탐지할 경로 가져오기
@@ -14,6 +14,7 @@ if __name__ == '__main__':
 
     ########################################################################################
     # Version2 : allFiles(폴더 선택한 경우)
+    if
     allFiles = glob.glob('C:\\TMP4\\*.exe')
     # 가져온 리스트만큼 반복작업 진행
     for fileName in allFiles:

@@ -219,7 +219,7 @@ def get_mal_kind(fileName):
     except:
         print("[+] dic['positives'] DOES NOT EXIST.")
         return 0, None, None
-get_mal_kind("C:\\TMP2\\wLoader.exe")
+# get_mal_kind("C:\\TMP2\\wLoader.exe")
 
 
 
