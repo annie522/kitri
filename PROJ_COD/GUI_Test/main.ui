@@ -1201,14 +1201,15 @@ border-bottom-right-radius: 5px;</string>
    </property>
    <property name="font">
     <font>
-     <pointsize>30</pointsize>
+     <family>Arial Black</family>
+     <pointsize>38</pointsize>
      <weight>12</weight>
      <italic>false</italic>
      <bold>false</bold>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 100 30pt;</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;EM&lt;/span&gt;&lt;span style=&quot;color:#0F75BD;&quot;&gt;DETECTOR&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>

@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
     ########################################################################################
     # Version2 : allFiles(폴더 선택한 경우)
-    if
+
     allFiles = glob.glob('C:\\TMP4\\*.exe')
     # 가져온 리스트만큼 반복작업 진행
     for fileName in allFiles:
