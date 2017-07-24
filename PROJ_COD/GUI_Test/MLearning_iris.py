@@ -21,12 +21,14 @@ with open("iris.csv","r",encoding="utf-8") as fp:
 
 # 가장 앞 줄의 헤더 제거
 del csv[0]
+print("csv   ::::::::::: ",csv)
 
 # 데이터 셔플하기(섞기)
 random.shuffle(csv)
 
 # 학습 전용 데이터와 테스트 전용 데이터 분할하기(2:1 비율)
 total_len = len(csv)
+print("total_len : ", total_len)
 train_len = int(total_len * 2 / 3)
 train_data = []
 train_label = []

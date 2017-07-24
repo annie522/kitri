@@ -1,12 +1,12 @@
 import pefile
-import distorm3
+import dis
 import sys
 import glob
 import re
 import PROJ_COD.Con_Virustotal as vs
 import PROJ_COD.MongoDB_Connection as mg
-import PROJ_COD.Get_File_Hash as fh
-import PROJ_COD.GUI_Test.Get_File_Hash as gfh
+import PROJ_COD.GUI_Test.Get_File_Hash as fh
+import distorm3
 
 """
 작성일   : 2017-07-14(최초작성)
@@ -172,60 +172,41 @@ def getFileInfo(filePath):
         "STD": op_list_count.get("STD"),
     })
     print(op_list_count_md)
-
-    # 가져온 리스트만큼 반복작업 진행
-    rslt = vs.get_mal_kind(filePath)
-    print(rslt)
-    rslt2 = gfh.checkHashInDB(rslt[2])
-    print(rslt2)
-    if rslt2[0] == "NO":
-        opcode_data = mg.DBConn("shutdown").opcode_data
-        try:
-            del op_list_count_md['_id']
-        except:pass
-        if rslt[0]>9:
-            op_list_count_md.update({"kind":"MALWARE","detect": rslt[1], "hash" : rslt[2]})
-        else:
-            op_list_count_md.update({"kind": "NORMAL", "detect": "NORMAL", "hash": rslt[2]})
-        print("insert_teset_doc : ",op_list_count_md)
-        try:
-            opcode_data.insert(op_list_count_md)
-            print("[+] insert success", sys.exc_info()[0])
-        except:
-            print("[-] insert failed",sys.exc_info()[0])
+    op_list_count_md.update({"kind": "", "detect": "", "hash": fh.getFileHash(filePath)})
+    print("op_list_count_md : ",op_list_count_md)
     return op_list_count_md
 
-
-if __name__ == "__main__":
-    # # DB에 저장한 샘플 악성코드 폴더의 악성코드 리스트를 가져옴
-    # filelist = glob.glob('C:\\TMP2\\*.exe')
-    # # print(filelist)
-    #
-    # # 가져온 리스트만큼 반복작업 진행
-    # for i in filelist:
-    #     print("file_name : ",i)
-    #     rslt = vs.get_mal_kind(i)
-    #     print(rslt)
-    #     users = mg.DBConn("maldb").users
-    #     if rslt[0]>0:
-    #         if fh.get_hash_match(i) == False:
-    #             insert_test_doc = get_info()
-    #             try:
-    #                 del insert_test_doc['_id']
-    #             except:pass
-    #             insert_test_doc.update({"detect": rslt[1], "hash" : rslt[2]})
-    #             print("insert_teset_doc : ",insert_test_doc)
-    #             try:
-    #                 users.insert(insert_test_doc)
-    #                 print("[+] insert success", sys.exc_info()[0])
-    #             except:
-    #                 print("[-] insert failed",sys.exc_info()[0])
-    #         else:
-    #             print("[-] We find matched Hash. You don't need to insert again!")
-    # DB에 저장한 샘플 악성코드 폴더의 악성코드 리스트를 가져옴
-    filelist = glob.glob('C:\\TMP2\\*.exe')
-    # print(filelist)
-
-    # 가져온 리스트만큼 반복작업 진행
-    for i in filelist:
-        # getFileInfo("C:\\TMP5\\alibox_10087.exe")
+#
+# if __name__ == "__main__":
+#     # # DB에 저장한 샘플 악성코드 폴더의 악성코드 리스트를 가져옴
+#     # filelist = glob.glob('C:\\TMP2\\*.exe')
+#     # # print(filelist)
+#     #
+#     # # 가져온 리스트만큼 반복작업 진행
+#     # for i in filelist:
+#     #     print("file_name : ",i)
+#     #     rslt = vs.get_mal_kind(i)
+#     #     print(rslt)
+#     #     users = mg.DBConn("maldb").users
+#     #     if rslt[0]>0:
+#     #         if fh.get_hash_match(i) == False:
+#     #             insert_test_doc = get_info()
+#     #             try:
+#     #                 del insert_test_doc['_id']
+#     #             except:pass
+#     #             insert_test_doc.update({"detect": rslt[1], "hash" : rslt[2]})
+#     #             print("insert_teset_doc : ",insert_test_doc)
+#     #             try:
+#     #                 users.insert(insert_test_doc)
+#     #                 print("[+] insert success", sys.exc_info()[0])
+#     #             except:
+#     #                 print("[-] insert failed",sys.exc_info()[0])
+#     #         else:
+#     #             print("[-] We find matched Hash. You don't need to insert again!")
+#     # DB에 저장한 샘플 악성코드 폴더의 악성코드 리스트를 가져옴
+#     filelist = glob.glob('C:\\TMP2\\*.exe')
+#     # print(filelist)
+#
+#     # 가져온 리스트만큼 반복작업 진행
+#     for i in filelist:
+#         # getFileInfo("C:\\TMP5\\alibox_10087.exe")

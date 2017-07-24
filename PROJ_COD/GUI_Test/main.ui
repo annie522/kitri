@@ -76,7 +76,7 @@
     <enum>QTabWidget::Rounded</enum>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>4</number>
    </property>
    <property name="iconSize">
     <size>
@@ -451,7 +451,7 @@ color: white;border:nono;</string>
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="numCountLabel3">
+     <widget class="QLabel" name="machineResultLabel">
       <property name="geometry">
        <rect>
         <x>585</x>
@@ -830,7 +830,7 @@ color: white;border:nono;</string>
       <string>악성 파일 :              개</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit">
+    <widget class="QLineEdit" name="numNormal">
      <property name="geometry">
       <rect>
        <x>280</x>
@@ -844,7 +844,7 @@ color: white;border:nono;</string>
 border-radius:3px;</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit_2">
+    <widget class="QLineEdit" name="numMalware">
      <property name="geometry">
       <rect>
        <x>440</x>
@@ -858,7 +858,7 @@ border-radius:3px;</string>
 border-radius:3px;</string>
      </property>
     </widget>
-    <widget class="QLabel" name="selected_file_2">
+    <widget class="QLabel" name="selected_folder">
      <property name="geometry">
       <rect>
        <x>80</x>
@@ -983,9 +983,9 @@ color: white;border:nono;</string>
     <zorder>label_24</zorder>
     <zorder>label_11</zorder>
     <zorder>label_12</zorder>
-    <zorder>lineEdit</zorder>
-    <zorder>lineEdit_2</zorder>
-    <zorder>selected_file_2</zorder>
+    <zorder>numNormal</zorder>
+    <zorder>numMalware</zorder>
+    <zorder>selected_folder</zorder>
     <zorder>fileopenBtn_2</zorder>
     <zorder>toolButton_2</zorder>
    </widget>
@@ -1105,46 +1105,6 @@ color: rgb(223, 223, 223);</string>
       <string>탐지 된 파일</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit_3">
-     <property name="geometry">
-      <rect>
-       <x>460</x>
-       <y>80</y>
-       <width>91</width>
-       <height>20</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="lineEdit_4">
-     <property name="geometry">
-      <rect>
-       <x>570</x>
-       <y>80</y>
-       <width>91</width>
-       <height>20</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="lineEdit_5">
-     <property name="geometry">
-      <rect>
-       <x>570</x>
-       <y>110</y>
-       <width>91</width>
-       <height>20</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="lineEdit_6">
-     <property name="geometry">
-      <rect>
-       <x>460</x>
-       <y>110</y>
-       <width>91</width>
-       <height>20</height>
-      </rect>
-     </property>
-    </widget>
     <widget class="QLabel" name="label_18">
      <property name="geometry">
       <rect>
@@ -1188,6 +1148,58 @@ border-top-right-radius:5px;
 border-bottom-right-radius: 5px;</string>
      </property>
     </widget>
+    <widget class="QLabel" name="inputNormal">
+     <property name="geometry">
+      <rect>
+       <x>470</x>
+       <y>80</y>
+       <width>64</width>
+       <height>15</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="detectedNormal">
+     <property name="geometry">
+      <rect>
+       <x>580</x>
+       <y>80</y>
+       <width>64</width>
+       <height>15</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="inputMalware">
+     <property name="geometry">
+      <rect>
+       <x>480</x>
+       <y>110</y>
+       <width>64</width>
+       <height>15</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="detectedMalware">
+     <property name="geometry">
+      <rect>
+       <x>580</x>
+       <y>110</y>
+       <width>64</width>
+       <height>15</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QLabel" name="title">
@@ -1203,7 +1215,7 @@ border-bottom-right-radius: 5px;</string>
     <font>
      <family>Arial Black</family>
      <pointsize>38</pointsize>
-     <weight>12</weight>
+     <weight>50</weight>
      <italic>false</italic>
      <bold>false</bold>
     </font>
@@ -1326,6 +1338,38 @@ border-bottom-right-radius: 5px;</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>fileopenBtn_2</sender>
+   <signal>clicked()</signal>
+   <receiver>QWidget</receiver>
+   <slot>folderopenBtnClick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>513</x>
+     <y>261</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>549</x>
+     <y>5</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>QWidget</receiver>
+   <slot>startFolderDetectionBtnClick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>336</x>
+     <y>467</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>557</x>
+     <y>151</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>fileopenBtnClick()</slot>
@@ -1336,5 +1380,7 @@ border-bottom-right-radius: 5px;</string>
   <slot>delLogBtnClick()</slot>
   <slot>delFileBtnClick()</slot>
   <slot>tableRowClick()</slot>
+  <slot>folderopenBtnClick()</slot>
+  <slot>startFolderDetectionBtnClick()</slot>
  </slots>
 </ui>
