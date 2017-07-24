@@ -1,59 +1,48 @@
 import sys
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 
+kospi_top5 = {
+    'code': ['005930', '015760', '005380', '090430', '012330'],
+    'name': ['삼성전자', '한국전력', '현대차', '아모레퍼시픽', '현대모비스'],
+    'cprice': ['1,269,000', '60,100', '132,000', '414,500', '243,500']
+}
+column_idx_lookup = {'code': 0, 'name': 1, 'cprice': 2}
 
-class filedialogdemo(QWidget):
-    def __init__(self, parent=None):
-        super(filedialogdemo, self).__init__(parent)
+class MyWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setupUI()
 
-        layout = QVBoxLayout()
-        self.btn = QPushButton("QFileDialog static method demo")
-        self.btn.clicked.connect(self.getfile)
+    def setupUI(self):
+        self.setGeometry(800, 200, 300, 300)
 
-        layout.addWidget(self.btn)
-        self.le = QLabel("Hello")
+        self.tableWidget = QTableWidget(self)
+        self.tableWidget.resize(290, 290)
+        self.tableWidget.setRowCount(5)
+        self.tableWidget.setColumnCount(3)
+        self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
-        layout.addWidget(self.le)
-        self.btn1 = QPushButton("QFileDialog object")
-        self.btn1.clicked.connect(self.getfiles)
-        layout.addWidget(self.btn1)
+        self.setTableWidgetData()
 
-        self.contents = QTextEdit()
-        layout.addWidget(self.contents)
-        self.setLayout(layout)
-        self.setWindowTitle("File Dialog demo")
+    def setTableWidgetData(self):
+        column_headers = ['날짜', '파일경로', '상태','분석결과']
+        self.tableWidget.setHorizontalHeaderLabels(column_headers)
 
-    def getfile(self):
-        print("11111111111111111111")
-        fname = QFileDialog.getOpenFileName(self, 'Open file',"/")
-        print("22222222222222222222")
-        self.le.setPixmap(QPixmap(fname))
-        print("3333333333333333333")
-        print(fname)
+        for k, v in kospi_top5.items():
+            col = column_idx_lookup[k]
+            for row, val in enumerate(v):
+                item = QTableWidgetItem(val)
+                if col == 2:
+                    item.setTextAlignment(Qt.AlignVCenter | Qt.AlignRight)
 
-    def getfiles(self):
-        dlg = QFileDialog()
-        dlg.setFileMode(QFileDialog.AnyFile)
-        dlg.setFilter("Text files (*.txt)")
-        # filenames = QStringList()
+                self.tableWidget.setItem(row, col, item)
 
-        if dlg.exec_():
-            filenames = dlg.selectedFiles()
-            f = open(filenames[0], 'r')
+        self.tableWidget.resizeColumnsToContents()
+        self.tableWidget.resizeRowsToContents()
 
-            with f:
-                data = f.read()
-                self.contents.setText(data)
-
-
-def main():
+if __name__ == "__main__":
     app = QApplication(sys.argv)
-    ex = filedialogdemo()
-    ex.show()
-    sys.exit(app.exec_())
-
-
-if __name__ == '__main__':
-    main()
+    mywindow = MyWindow()
+    mywindow.show()
+    app.exec_()

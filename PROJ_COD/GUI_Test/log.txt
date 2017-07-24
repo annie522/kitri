@@ -1,0 +1,1 @@
+NUMBER1 --> 'date': '2017-07-24 16:13:16', 'filename': 'C:\\Users\\kitri\\Desktop\\calc123123.txt', 'result': 'normal', 'state': 'finished'
