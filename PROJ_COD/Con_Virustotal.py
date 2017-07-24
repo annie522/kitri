@@ -172,15 +172,15 @@ def get_mal_kind(i):
     var = main.md5(i)
     dic = main.rscReport(var)
     try:
-        if dic['positives'] > 4:
+        if dic['positives'] > 10:
             for key, value in dic['scans'].items():
                 if value['result'] != None:
                     return dic['positives'], value['result'], dic['md5']
         else:
             return 0, None, None
     except:
+        print("[+] dic['positives'] DOES NOT EXIST.")
         return 0, None, None
-
 
 
 

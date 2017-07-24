@@ -467,7 +467,7 @@ color: white;border:nono;</string>
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="numCountLabel1">
+     <widget class="QLabel" name="MD5HashLabel">
       <property name="geometry">
        <rect>
         <x>208</x>

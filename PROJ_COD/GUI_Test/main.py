@@ -9,7 +9,7 @@ from datetime import datetime
 import os
 import PROJ_COD.GUI_Test.Get_File_Hash as getFileHash
 import PROJ_COD.MongoDB_Connection as mongoDB
-
+import PROJ_COD.Machine.kim.Con_Virustotal as vt
 import PROJ_COD.GUI_Test.fileopen as fo
 
 class Form(QtWidgets.QDialog):
@@ -30,8 +30,6 @@ class Form(QtWidgets.QDialog):
 
     @pyqtSlot()
     def startFileDetectionBtnClick(self):
-        #########################################################################################
-        # 검사시작 버튼 클릭시 tab2 세팅
         todayTime = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
         self.ui.page2_dateLabel.setText(todayTime)
         fileBaseName = os.path.basename(fname)
@@ -40,8 +38,61 @@ class Form(QtWidgets.QDialog):
         self.ui.page2_filepathLabel.setText(fileDirName)
         fileHash = getFileHash.getFileHash(fname)
         self.ui.page2_md5Label.setText(fileHash)
-        self.ui.page2_similarLabel.setText("48%")
-        #### 정상파일인경우 강제 세팅 (추후 수정)
+
+        md5Check = getFileHash.checkHashInDB(fname)
+        print(type(md5Check))
+        print(md5Check)
+        if md5Check[0] == "YES":
+            if md5Check[1] == "M":
+                print("Malware!!!!")
+                self.ui.MD5HashLabel.setText("악성 코드")
+                self.ui.page2_similarLabel.setText("100%")
+                self.ui.numberCountLabel.setPixmap(QPixmap("그림1.jpg"))
+            elif md5Check[1] == "N":
+                print("Nomal File!!!!!!")
+                self.ui.MD5HashLabel.setText("정상 파일")
+                self.ui.page2_similarLabel.setText("0%")
+                self.ui.numberCountLabel.setPixmap(QPixmap("그림1.jpg"))
+            else:
+                print("Error11111111111111111")
+            print("YESTSE")
+        elif md5Check[0] == "NO":
+            self.ui.page2_similarLabel.setText("1000%")
+            self.ui.MD5HashLabel.setText("미등록")
+            self.ui.numberCountLabel.setPixmap(QPixmap("그림1.jpg"))
+
+
+            ################################
+
+            main = vt.Virustotal()
+            dic = main.rscReport(md5Check)
+            try:
+                if dic['positives'] > 10:
+                    for key, value in dic['scans'].items():
+                        if value['result'] != None:
+                            ss=dic['positives'], value['result'], dic['md5']
+                            self.ui.numCountLabel2.setText("악성 코드")
+                            self.ui.numberCountLabel.setPixmap(QPixmap("그림2.jpg"))
+
+                else:
+                    self.ui.numCountLabel2.setText("정상 파일")
+                    self.ui.numberCountLabel.setPixmap(QPixmap("그림2.jpg"))
+            except:
+                self.ui.numCountLabel2.setText("Error")
+                self.ui.numberCountLabel.setPixmap(QPixmap("그림2.jpg"))
+                print("[+] dic['positives'] DOES NOT EXIST.")
+            ################################
+            rrr= vt.get_mal_kind(fname)
+            print(rrr)
+            #self.up.numberCountLabel.setPiexmap("그림1.jpg")
+        else:
+            print("Error !!!")
+
+        #########################################################################################
+        # 검사시작 버튼 클릭시 tab2 세팅
+
+        # self.ui.page2_similarLabel.setText("48%")
+        # #### 정상파일인경우 강제 세팅 (추후 수정)
         if self.ui.page2_similarLabel.text() == "0%":
             self.ui.delFileBtn.setEnabled(False)
             self.ui.delFileBtn.setStyleSheet("background-color:lightgray;color: white;border:nono;")
@@ -50,12 +101,12 @@ class Form(QtWidgets.QDialog):
             self.ui.delFileBtn.setEnabled(True)
             self.ui.delFileBtn.setStyleSheet("background-color: #0F75BD;color: white;border:nono;")
         #### 진행 결과에 따라 하단 라벨 이미지 변경
-        numberCount = "0"
-        if numberCount == "1": changeImage = QPixmap("그림1.jpg")
-        elif numberCount == "2": changeImage = QPixmap("그림2.jpg")
-        elif numberCount == "3": changeImage = QPixmap("그림3.jpg")
-        elif numberCount == "0": changeImage = QPixmap("그림4.jpg")
-        self.ui.numberCountLabel.setPixmap(changeImage)
+        # numberCount = "0"
+        # if numberCount == "1": changeImage = QPixmap("그림1.jpg")
+        # elif numberCount == "2": changeImage = QPixmap("그림2.jpg")
+        # elif numberCount == "3": changeImage = QPixmap("그림3.jpg")
+        # elif numberCount == "0": changeImage = QPixmap("그림4.jpg")
+        # self.ui.numberCountLabel.setPixmap(changeImage)
 
         #########################################################################################
         Form.selectLog(self)
