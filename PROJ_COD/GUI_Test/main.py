@@ -4,9 +4,9 @@ from PyQt5 import uic
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QVBoxLayout, QFileDialog
-import PROJ_COD.GUI_Test.detectionMain as detectionMain
+#import kitri.PROJ_COD.GUI_Test.detectionMain as detectionMain
 
-import PROJ_COD.GUI_Test.fileopen as fo
+import kitri.PROJ_COD.GUI_Test.fileopen as fo
 
 fname = ""
 
