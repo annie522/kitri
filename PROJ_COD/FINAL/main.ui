@@ -381,7 +381,7 @@ color: white;border:nono;</string>
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>그림1.jpg</pixmap>
+       <pixmap>../GUI_Test/그림1.jpg</pixmap>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -1194,7 +1194,7 @@ border-bottom-right-radius: 5px;</string>
       </rect>
      </property>
      <property name="text">
-      <string>TextLabel</string>
+      <string/>
      </property>
     </widget>
     <widget class="QLabel" name="detectedNormal">
@@ -1207,7 +1207,7 @@ border-bottom-right-radius: 5px;</string>
       </rect>
      </property>
      <property name="text">
-      <string>TextLabel</string>
+      <string/>
      </property>
     </widget>
     <widget class="QLabel" name="inputMalware">
@@ -1220,7 +1220,7 @@ border-bottom-right-radius: 5px;</string>
       </rect>
      </property>
      <property name="text">
-      <string>TextLabel</string>
+      <string/>
      </property>
     </widget>
     <widget class="QLabel" name="detectedMalware">
@@ -1233,7 +1233,7 @@ border-bottom-right-radius: 5px;</string>
       </rect>
      </property>
      <property name="text">
-      <string>TextLabel</string>
+      <string/>
      </property>
     </widget>
     <widget class="QLabel" name="resultGraph">
@@ -1246,7 +1246,7 @@ border-bottom-right-radius: 5px;</string>
       </rect>
      </property>
      <property name="text">
-      <string>TextLabel</string>
+      <string/>
      </property>
     </widget>
    </widget>
