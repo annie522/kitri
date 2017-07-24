@@ -61,7 +61,7 @@ class Virustotal():
                     base = self.base + 'file/report'
                     parameters = {"resource": filemd5,
                                   "apikey": "c56069a2add618e2d5b8b9a08783c4503d3d240141edc4b485d23a59a8faccbe"}
-                    print("[+] VIRUSTOTAL API : Number03")
+                    print("[+] VIRUSTOTAL API : 주승Number03")
                     r = requests.post(base, data=parameters)
                     resp = r.json()
                     results = parse_resp(resp)
