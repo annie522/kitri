@@ -42,8 +42,6 @@ class Form(QtWidgets.QDialog):
         self.ui.page2_md5Label.setText(fileHash)
 
         md5Check = getFileHash.checkHashInDB(fname)
-        print(type(md5Check))
-        print(md5Check)
         if md5Check[0] == "YES":
             if md5Check[1] == "M":
                 print("Malware!!!!")
