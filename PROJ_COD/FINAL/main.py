@@ -145,6 +145,12 @@ class Form(QtWidgets.QDialog):
             self.tabWidget.setCurrentIndex(1)
 
     @pyqtSlot()
+    def delBtnClick(self):
+        filePath = self.ui.page2_filepathLabel.text() + self.ui.page2_filenameLabel.text()
+        print(filePath)
+        # os.remove(filePath)
+
+    @pyqtSlot()
     def selectLog(self):
         #########################################################################################
         # 검사기록 로그를 불러옴
