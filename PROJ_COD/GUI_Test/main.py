@@ -41,21 +41,19 @@ class Form(QtWidgets.QDialog):
         fileHash = getFileHash.getFileHash(fname)
         self.ui.page2_md5Label.setText(fileHash)
 
+        #사용자가 선택한 파일의 Hash 값과 DB에 있는 Hash값을 비교하여 등록 여부 및 악성코드 여부 확인
         md5Check = getFileHash.checkHashInDB(fname)
         if md5Check[0] == "YES":
             if md5Check[1] == "M":
-                print("Malware!!!!")
                 self.ui.MD5HashLabel.setText("악성 코드")
                 self.ui.page2_similarLabel.setText("100%")
                 self.ui.numberCountLabel.setPixmap(QPixmap("그림1.jpg"))
             elif md5Check[1] == "N":
-                print("Nomal File!!!!!!")
                 self.ui.MD5HashLabel.setText("정상 파일")
                 self.ui.page2_similarLabel.setText("0%")
                 self.ui.numberCountLabel.setPixmap(QPixmap("그림1.jpg"))
             else:
-                print("Error11111111111111111")
-            print("YESTSE")
+                pass
         elif md5Check[0] == "NO":
             self.ui.page2_similarLabel.setText("100%")
             self.ui.MD5HashLabel.setText("미등록")
@@ -99,26 +97,15 @@ class Form(QtWidgets.QDialog):
         # else:
         #     print("Error !!!")
 
-
-        #########################################################################################
-        # 검사시작 버튼 클릭시 tab2 세팅
-
-        # self.ui.page2_similarLabel.setText("48%")
-        # #### 정상파일인경우 강제 세팅 (추후 수정)
+        #정상 파일일 경우 삭제버튼 비활성화
         if self.ui.page2_similarLabel.text() == "0%":
             self.ui.delFileBtn.setEnabled(False)
             self.ui.delFileBtn.setStyleSheet("background-color:lightgray;color: white;border:nono;")
-        #### 악성파일인경우 강제 세팅 (추후 수정)
+        #악성 파일일 경우 삭제버튼 활성화
         else:
             self.ui.delFileBtn.setEnabled(True)
             self.ui.delFileBtn.setStyleSheet("background-color: #0F75BD;color: white;border:nono;")
-        #### 진행 결과에 따라 하단 라벨 이미지 변경
-        # numberCount = "0"
-        # if numberCount == "1": changeImage = QPixmap("그림1.jpg")
-        # elif numberCount == "2": changeImage = QPixmap("그림2.jpg")
-        # elif numberCount == "3": changeImage = QPixmap("그림3.jpg")
-        # elif numberCount == "0": changeImage = QPixmap("그림4.jpg")
-        # self.ui.numberCountLabel.setPixmap(changeImage)
+
 
         #########################################################################################
         Form.selectLog(self)

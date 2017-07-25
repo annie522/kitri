@@ -1,5 +1,6 @@
-import hashlib, glob
-import PROJ_COD.MongoDB_Connection as mongoDB
+import hashlib
+
+import PROJ_COD.FINAL.Get_MongoDB_Connection as mongoDB
 
 """
 작성일   : 2017-07-14(최초작성)
@@ -8,9 +9,6 @@ import PROJ_COD.MongoDB_Connection as mongoDB
 프로그램 : 파일 해시값을 중복되지 않게 몽고디비에 저장하는 코드
 """
 
-
-
-#파일 Hash값 추출
 def getFileHash(filename):
     with open(filename, 'rb') as fh:
         m = hashlib.md5()
@@ -21,7 +19,7 @@ def getFileHash(filename):
             m.update(data)
         return m.hexdigest()
 
-#파일의 Hash값과 DB에 있는 Hash값을 비교하여 MAIN 코드에 결과값을 전송
+
 def checkHashInDB(md5Hash):
     checkCount = 0
     try:
@@ -44,11 +42,3 @@ def checkHashInDB(md5Hash):
             return "YES"
     except:
         pass
-
-def Get_File_Hash_Main(filename):
-    return checkHashInDB(getFileHash(filename)), getFileHash(filename)
-# if __name__ == "__main__":
-#     flist = glob.glob('C:\\TMP2\\*.exe')
-#     print(flist)
-#     for i in flist:
-#         print(checkHashInDB(getFileHash(i)))
