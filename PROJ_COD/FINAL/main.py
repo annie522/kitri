@@ -65,11 +65,11 @@ class Form(QtWidgets.QDialog):
                 else:
                     pass
             elif md5Check[0] == "NO":
-                self.ui.page2_similarLabel.setText("??%")
+                # self.ui.page2_similarLabel.setText("??%")
                 self.ui.MD5HashLabel.setText("미등록")
                 self.ui.numberCountLabel.setPixmap(QPixmap("그림1.jpg"))
                 # 바이러스 토탈 돌리기
-                dic = vt.get_mal_kind(fileHash)
+                dic = vt.get_mal_kind(fname)
                 print(dic)
                 print(dic[0])
                 try:

@@ -117,8 +117,78 @@ class Virustotal():
                                 except:
                                     print("[+] U NEED MORE VIRUSTOTAL API KEY")
 
-
-
+    def rscSubmit(self, rsc):
+        try:
+            base = self.base + 'file/scan'
+            f = open(rsc, 'rb')
+            parameters = {"apikey":'7a20a8ed49ca09b249073a380e36b69830d4d58172fc5c9be7b42b24fdd4d183'}
+            r = requests.post(base, data=parameters, files={'file': f})
+            print("[+] VIRUSTOTAL API : 주승 :Number01")
+            resp = r.json()
+            results = parse_resp(resp)
+            return results
+        except:
+            try:
+                base = self.base + 'file/scan'
+                f = open(rsc, 'rb')
+                parameters = {"apikey": "30c7167cd6890a8e26e7bb29cc0c9c4354cdb5a7b6ec8a187fe16a1dad2f4a07"}
+                print("[+] VIRUSTOTAL API : Number02")
+                r = requests.post(base, data=parameters, files={'file': f})
+                resp = r.json()
+                results = parse_resp(resp)
+                return results
+            except:
+                try:
+                    base = self.base + 'file/scan'
+                    f = open(rsc, 'rb')
+                    parameters = {"apikey": "8572f48edcf472921571b816260d668dbfcd9695568507f117682de63ae11e46"}
+                    print("[+] VIRUSTOTAL API : 순모Number03")
+                    r = requests.post(base, data=parameters, files={'file': f})
+                    resp = r.json()
+                    results = parse_resp(resp)
+                    return results
+                except:
+                    try:
+                        base = self.base + 'file/scan'
+                        f = open(rsc, 'rb')
+                        parameters = {"apikey": "1debafcb5beab36b14e610bf8b8fdf33a86cd59bffc8413b36c212bf260284b7"}
+                        print("[+] VIRUSTOTAL API : Number04")
+                        r = requests.post(base, data=parameters, files={'file': f})
+                        resp = r.json()
+                        results = parse_resp(resp)
+                        return results
+                    except:
+                        try:
+                            base = self.base + 'file/scan'
+                            f = open(rsc, 'rb')
+                            parameters = {"apikey": "92b754bf98f0cad80c68e335d61022701105812413c98b0a8837078d7d2c7aaf"}
+                            print("[+] VIRUSTOTAL API : Number05")
+                            r = requests.post(base, data=parameters, files={'file': f})
+                            resp = r.json()
+                            results = parse_resp(resp)
+                            return results
+                        except:
+                            try:
+                                base = self.base + 'file/scan'
+                                f = open(rsc, 'rb')
+                                parameters = {"apikey": "4d6c4555648946ccf662bc89b1d0dc0955e72dd78fdf3e1ea7b69dfad33f30f8"}
+                                print("[+] VIRUSTOTAL API : Number06")
+                                r = requests.post(base, data=parameters, files={'file': f})
+                                resp = r.json()
+                                results = parse_resp(resp)
+                                return results
+                            except:
+                                try:
+                                    base = self.base + 'file/scan'
+                                    f = open(rsc, 'rb')
+                                    parameters = {"apikey": "a120f0984893b4d33b199baaa2e7929c61bb921918d8de1df36d629d12839905"}
+                                    print("[+] VIRUSTOTAL API : Number07")
+                                    r = requests.post(base, data=parameters, files={'file': f})
+                                    resp = r.json()
+                                    results = parse_resp(resp)
+                                    return results
+                                except:
+                                    print("[+] U NEED MORE VIRUSTOTAL API KEY")
 def parse_resp(resp):
     """ Parses the response from the requests.gets/posts()
     then returns the data back to the function """
@@ -129,11 +199,12 @@ def parse_resp(resp):
 
     return buf
 #바이러스 토탈에게 요청해서 받은 정보 중 악성코드 진단한 밴더 수, 악성코드 종류,  MD5 3개의 값을 리턴해준다.
-def get_mal_kind(filehash):
+def get_mal_kind(fileName):
     main = Virustotal()
-    # dic1 = main.rscSubmit(fileName)
-    #var = main.md5(fileName)
-    dic = main.rscReport(filehash)
+    FileSending = main.rscSubmit(fileName)
+    print(FileSending)
+    var = main.md5(fileName)
+    dic = main.rscReport(var)
     print(dic)
     try:
         if dic['positives'] > 10:
@@ -145,7 +216,7 @@ def get_mal_kind(filehash):
     except:
         print("[+] dic['positives'] DOES NOT EXIST.")
         return 0, "ERROR"
-
+get_mal_kind("c:\Active800x600.exe")
 
 
 
