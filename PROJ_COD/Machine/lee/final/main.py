@@ -1,15 +1,24 @@
-import glob, sys, os
+import glob
+import os
+import sys
+from datetime import datetime
+
+import PROJ_COD.FINAL.Get_File_Hash as getFileHash
+import PROJ_COD.FINAL.Get_MongoDB_Connection as mongoDB
+import matplotlib.pyplot as plt
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import pyqtSlot, Qt
 from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem, QAbstractItemView
-from datetime import datetime
-import matplotlib.pyplot as plt
 
+<<<<<<< Updated upstream:PROJ_COD/FINAL/main.py
 import PROJ_COD.FINAL.Get_File_Hash as getFileHash
 import PROJ_COD.FINAL.Get_Machine_Percentage as fileMachine
 import PROJ_COD.FINAL.Get_MongoDB_Connection as mongoDB
 import PROJ_COD.FINAL.Get_VirusTotal as vt
+=======
+import PROJ_COD.Machine.lee.final.Get_Machine_Percentage as fileMachine
+>>>>>>> Stashed changes:PROJ_COD/Machine/lee/final/main.py
 
 
 class Form(QtWidgets.QDialog):
@@ -108,30 +117,17 @@ class Form(QtWidgets.QDialog):
 
                 
 
-            #########################################################################################
-            # 검사시작 버튼 클릭시 tab2 세팅
 
-            # self.ui.page2_similarLabel.setText("48%")
-
-
-
-            # #### 정상파일인경우 강제 세팅 (추후 수정)
             if self.ui.page2_similarLabel.text() == "정상파일":
                 self.ui.delFileBtn.setEnabled(False)
                 self.ui.delFileBtn.setStyleSheet("background-color:lightgray;color: white;border:nono;")
-            #### 악성파일인경우 강제 세팅 (추후 수정)
+
             else:
                 self.ui.delFileBtn.setEnabled(True)
                 self.ui.delFileBtn.setStyleSheet("background-color: #0F75BD;color: white;border:nono;")
-            #### 진행 결과에 따라 하단 라벨 이미지 변경
-            # numberCount = "0"
-            # if numberCount == "1": changeImage = QPixmap("그림1.jpg")
-            # elif numberCount == "2": changeImage = QPixmap("그림2.jpg")
-            # elif numberCount == "3": changeImage = QPixmap("그림3.jpg")
-            # elif numberCount == "0": changeImage = QPixmap("그림4.jpg")
-            # self.ui.numberCountLabel.setPixmap(changeImage)
 
-            #########################################################################################
+
+
             Form.selectLog(self)
             # 검사시작 버튼 클릭시 tab3에 보여줄 로그 데이터베이스에 INSERT
             logDB = mongoDB.DBConn("shutdown").log
