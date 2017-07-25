@@ -76,7 +76,7 @@
     <enum>QTabWidget::Rounded</enum>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <property name="iconSize">
     <size>
@@ -1375,7 +1375,7 @@ border-bottom-right-radius: 5px;</string>
    <sender>deSelFileBtn</sender>
    <signal>clicked()</signal>
    <receiver>QWidget</receiver>
-   <slot>delBtnClick()</slot>
+   <slot>delFileBtnClick()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>493</x>
@@ -1384,22 +1384,6 @@ border-bottom-right-radius: 5px;</string>
     <hint type="destinationlabel">
      <x>558</x>
      <y>11</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>fileopenBtn_2</sender>
-   <signal>clicked()</signal>
-   <receiver>QWidget</receiver>
-   <slot>delBtnClick()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>513</x>
-     <y>261</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>549</x>
-     <y>5</y>
     </hint>
    </hints>
   </connection>
@@ -1432,6 +1416,22 @@ border-bottom-right-radius: 5px;</string>
     <hint type="destinationlabel">
      <x>476</x>
      <y>7</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fileopenBtn_2</sender>
+   <signal>clicked()</signal>
+   <receiver>QWidget</receiver>
+   <slot>folderopenBtnClick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>540</x>
+     <y>252</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>434</x>
+     <y>0</y>
     </hint>
    </hints>
   </connection>
