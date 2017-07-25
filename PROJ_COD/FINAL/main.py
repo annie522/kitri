@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import PROJ_COD.FINAL.Get_File_Hash as getFileHash
 import PROJ_COD.FINAL.Get_Machine_Percentage as fileMachine
 import PROJ_COD.FINAL.Get_MongoDB_Connection as mongoDB
+import PROJ_COD.FINAL.Get_VirusTotal as vt
 
 
 class Form(QtWidgets.QDialog):
@@ -67,6 +68,29 @@ class Form(QtWidgets.QDialog):
                 self.ui.page2_similarLabel.setText("100%")
                 self.ui.MD5HashLabel.setText("미등록")
                 self.ui.numberCountLabel.setPixmap(QPixmap("그림1.jpg"))
+                #바이러스 토탈 돌리기
+                main = vt.Virustotal()
+                dic = main.rscReport(fileHash)
+                print(dic)
+                print(dic['positives'])
+                try:
+                    if dic['positives'] > 10:
+                        for key, value in dic['scans'].items():
+                            if value['result'] != None:
+                                ss = dic['positives'], value['result'], dic['md5']
+                                self.ui.numCountLabel2.setText("악성 코드")
+                                self.ui.numberCountLabel.setPixmap(QPixmap("그림2.jpg"))
+                    else:
+                        self.ui.numCountLabel2.setText("정상 파일")
+                        self.ui.numberCountLabel.setPixmap(QPixmap("그림2.jpg"))
+                except:
+                    self.ui.numCountLabel2.setText("Error")
+                    self.ui.numberCountLabel.setPixmap(QPixmap("그림2.jpg"))
+                    print("[+] dic['positives'] DOES NOT EXIST.")
+                    # self.up.numberCountLabel.setPiexmap("그림1.jpg")
+                    ###############################
+            else:
+                print("Error !!!")
 
                 # 머신러닝 돌리는 코드
                 # 파일 경로 전송해줘야됨
@@ -82,29 +106,7 @@ class Form(QtWidgets.QDialog):
 
                 ################################
 
-            #     main = vt.Virustotal()
-            #     dic = main.rscReport(md5Check)
-            #     try:
-            #         if dic['positives'] > 10:
-            #             for key, value in dic['scans'].items():
-            #                 if value['result'] != None:
-            #                     ss=dic['positives'], value['result'], dic['md5']
-            #                     self.ui.numCountLabel2.setText("악성 코드")
-            #                     self.ui.numberCountLabel.setPixmap(QPixmap("그림2.jpg"))
-            #
-            #         else:
-            #             self.ui.numCountLabel2.setText("정상 파일")
-            #             self.ui.numberCountLabel.setPixmap(QPixmap("그림2.jpg"))
-            #     except:
-            #         self.ui.numCountLabel2.setText("Error")
-            #         self.ui.numberCountLabel.setPixmap(QPixmap("그림2.jpg"))
-            #         print("[+] dic['positives'] DOES NOT EXIST.")
-            #     ################################
-            #     rrr= vt.get_mal_kind(fname)
-            #     print(rrr)
-            # else:
-            #     print("Error !!!")
-
+                
 
             #########################################################################################
             # 검사시작 버튼 클릭시 tab2 세팅
@@ -201,7 +203,10 @@ class Form(QtWidgets.QDialog):
             selectedRow = self.ui.logTable.currentRow()
             filePath = self.ui.logTable.item(selectedRow,1).text()
             filePath = str(filePath).strip()
+            print("삭제 시도!!")
             os.remove(filePath)
+            print(" 삭제 됫어야한다.")
+            print(filePath)
         except:
             pass
 
