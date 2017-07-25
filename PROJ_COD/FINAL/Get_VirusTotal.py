@@ -205,20 +205,28 @@ def get_mal_kind(fileName):
     # print(FileSending)
     var = main.md5(fileName)
     dic = main.rscReport(var)
-    if str(dic)== "{}":
+    print(dic['verbose_msg'])
+    if str(dic)== "{}" or str(dic['verbose_msg']) == "The requested resource is not among the finished, queued or pending scans":
         FileSending = main.rscSubmit(fileName)
         print(FileSending)
+    # print("dic['positives']    dfsfsfsdfsdfs  ", dic['positives'])
+    dic = main.rscReport(var)
+    print(dic)
     try:
+        print("dic['positives']    dfsfsfsdfsdfs  ",dic['positives'])
         if dic['positives'] > 10:
+            print("wwwwwwwwwwwwwwww")
             for key, value in dic['scans'].items():
+                print("eeeeeeeeeeeeeeeeeee")
                 if value['result'] != None:
+                    print("rrrrrrrrrrrrrrrrrr")
                     return dic['positives'], value['result']
         else:
             return 0, "NORMAL"
     except:
         print("[+] dic['positives'] DOES NOT EXIST.")
         return 0, "ERROR"
-get_mal_kind("oksss.exe")
+# get_mal_kind("oksss.exe")
 
 
 
