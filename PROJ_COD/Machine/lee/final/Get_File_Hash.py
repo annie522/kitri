@@ -1,5 +1,6 @@
 import hashlib
-import PROJ_COD.FINAL.Get_MongoDB_Connection as mongoDB
+
+import PROJ_COD.Machine.lee.final.Get_MongoDB_Connection as mongoDB
 
 """
 작성일   : 2017-07-14(최초작성)

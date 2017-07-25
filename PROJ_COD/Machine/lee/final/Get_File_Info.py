@@ -1,6 +1,8 @@
-import pefile, re
-import PROJ_COD.FINAL.Get_File_Hash as fh
 import distorm3
+import pefile
+import re
+
+import PROJ_COD.Machine.lee.final.Get_File_Hash as fh
 
 """
 작성일   : 2017-07-14(최초작성)

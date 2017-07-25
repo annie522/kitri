@@ -43,7 +43,7 @@ def checkHashInDB(md5Hash):
         else:
             return "YES"
     except:
-        print("[+] Error HERE")
+        pass
 
 def Get_File_Hash_Main(filename):
     return checkHashInDB(getFileHash(filename)), getFileHash(filename)
