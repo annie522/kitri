@@ -40,12 +40,15 @@ class Virustotal():
 
     #바이러스 토탈에 정보를 넘겨서 바이러스 토탈의 Report 값 가져오기
     def rscReport(self,filemd5):
+        """ Get latest report of resource """
         try:
+            print(filemd5)
             params = {'apikey': '7a20a8ed49ca09b249073a380e36b69830d4d58172fc5c9be7b42b24fdd4d183', 'resource': filemd5}
             headers = {
                 "Accept-Encoding": "gzip, deflate",
                 "User-Agent": "gzip,  My Python requests library example client or username"
             }
+            print("[+] VIRUSTOTAL API : Number01")
             response = requests.get('https://www.virustotal.com/vtapi/v2/file/report', params=params, headers=headers)
             json_response = response.json()
             results = parse_resp(json_response)
@@ -126,24 +129,22 @@ def parse_resp(resp):
 
     return buf
 #바이러스 토탈에게 요청해서 받은 정보 중 악성코드 진단한 밴더 수, 악성코드 종류,  MD5 3개의 값을 리턴해준다.
-def get_mal_kind(fileName):
+def get_mal_kind(filehash):
     main = Virustotal()
     # dic1 = main.rscSubmit(fileName)
-    var = main.md5(fileName)
-    dic = main.rscReport(var)
+    #var = main.md5(fileName)
+    dic = main.rscReport(filehash)
     print(dic)
     try:
         if dic['positives'] > 10:
             for key, value in dic['scans'].items():
                 if value['result'] != None:
-                    return dic['positives'], value['result'], dic['md5']
-
-
+                    return dic['positives'], value['result']
         else:
-            return 0, None, None
+            return 0, "NORMAL"
     except:
         print("[+] dic['positives'] DOES NOT EXIST.")
-        return 0, None, None
+        return 0, "ERROR"
 
 
 

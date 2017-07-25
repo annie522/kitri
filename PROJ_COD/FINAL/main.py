@@ -1,27 +1,21 @@
-import glob
-import os
-import sys
-from datetime import datetime
-
-import matplotlib.pyplot as plt
+import glob, sys, os
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import pyqtSlot, Qt
 from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem, QAbstractItemView
+from datetime import datetime
+import matplotlib.pyplot as plt
 
-<<<<<<< Updated upstream:PROJ_COD/FINAL/main.py
 import PROJ_COD.FINAL.Get_File_Hash as getFileHash
+import PROJ_COD.FINAL.Get_Machine_Percentage as fileMachine
 import PROJ_COD.FINAL.Get_MongoDB_Connection as mongoDB
 import PROJ_COD.FINAL.Get_VirusTotal as vt
-=======
-import PROJ_COD.FINAL.Get_Machine_Percentage as fileMachine
->>>>>>> Stashed changes:PROJ_COD/Machine/lee/final/main.py
 
 
 class Form(QtWidgets.QDialog):
     def __init__(self, parent=None):
         QtWidgets.QDialog.__init__(self, parent)
-        self.ui = uic.loadUi("main.ui",self)
+        self.ui = uic.loadUi("main.ui", self)
         self.ui.setWindowTitle("EMDETECTOR")
         self.ui.setWindowIcon(QIcon(QPixmap("logo.png")))
         self.ui.show()
@@ -34,13 +28,11 @@ class Form(QtWidgets.QDialog):
         global fname
         fname = ""
 
-
     @pyqtSlot()
     def fileopenBtnClick(self):
         fname = QFileDialog.getOpenFileName(self, 'Open file', "/")
         fname = os.path.abspath(fname[0])
         self.ui.selected_file.setText(fname)
-
 
     @pyqtSlot()
     def startFileDetectionBtnClick(self):
@@ -63,29 +55,27 @@ class Form(QtWidgets.QDialog):
                 if md5Check[1] == "M":
                     self.ui.MD5HashLabel.setText("악성 코드")
                     self.ui.page2_similarLabel.setText("악성파일")
+                    self.ui.page2_similarLabel.setText("100%")
                     self.ui.numberCountLabel.setPixmap(QPixmap("그림1.jpg"))
                 elif md5Check[1] == "N":
                     self.ui.MD5HashLabel.setText("정상파일")
                     self.ui.page2_similarLabel.setText("정상파일")
                     self.ui.numberCountLabel.setPixmap(QPixmap("그림1.jpg"))
+                    self.ui.page2_similarLabel.setText("0%")
                 else:
                     pass
             elif md5Check[0] == "NO":
-                self.ui.page2_similarLabel.setText("100%")
+                self.ui.page2_similarLabel.setText("??%")
                 self.ui.MD5HashLabel.setText("미등록")
                 self.ui.numberCountLabel.setPixmap(QPixmap("그림1.jpg"))
-                #바이러스 토탈 돌리기
-                main = vt.Virustotal()
-                dic = main.rscReport(fileHash)
+                # 바이러스 토탈 돌리기
+                dic = vt.get_mal_kind(fileHash)
                 print(dic)
-                print(dic['positives'])
+                print(dic[0])
                 try:
-                    if dic['positives'] > 10:
-                        for key, value in dic['scans'].items():
-                            if value['result'] != None:
-                                ss = dic['positives'], value['result'], dic['md5']
-                                self.ui.numCountLabel2.setText("악성 코드")
-                                self.ui.numberCountLabel.setPixmap(QPixmap("그림2.jpg"))
+                    if dic[0] > 10:
+                        self.ui.numCountLabel2.setText("악성 코드")
+                        self.ui.numberCountLabel.setPixmap(QPixmap("그림2.jpg"))
                     else:
                         self.ui.numCountLabel2.setText("정상 파일")
                         self.ui.numberCountLabel.setPixmap(QPixmap("그림2.jpg"))
@@ -101,7 +91,7 @@ class Form(QtWidgets.QDialog):
                 # 머신러닝 돌리는 코드
                 # 파일 경로 전송해줘야됨
                 machineRslt = fileMachine.getFIleMachine(fname)
-                if machineRslt == "NOMAL":
+                if machineRslt == "NORMAL":
                     self.ui.page2_similarLabel.setText("정상파일")
                     self.ui.machineResultLabel.setText("정상파일")
                 else:
@@ -112,26 +102,39 @@ class Form(QtWidgets.QDialog):
 
                 ################################
 
-                
+            #########################################################################################
+            # 검사시작 버튼 클릭시 tab2 세팅
 
+            # self.ui.page2_similarLabel.setText("48%")
 
-            if self.ui.page2_similarLabel.text() == "정상파일":
+            print(self.ui.numCountLabel2.text())
+
+            # #### 정상파일인경우 강제 세팅 (추후 수정)
+            if self.ui.numCountLabel2.text() == "정상 파일":
                 self.ui.delFileBtn.setEnabled(False)
+                print("ddddd머지")
                 self.ui.delFileBtn.setStyleSheet("background-color:lightgray;color: white;border:nono;")
-
+            #### 악성파일인경우 강제 세팅 (추후 수정)
             else:
                 self.ui.delFileBtn.setEnabled(True)
+                print("트루루루룰루루루루루")
                 self.ui.delFileBtn.setStyleSheet("background-color: #0F75BD;color: white;border:nono;")
+            #### 진행 결과에 따라 하단 라벨 이미지 변경
+            # numberCount = "0"
+            # if numberCount == "1": changeImage = QPixmap("그림1.jpg")
+            # elif numberCount == "2": changeImage = QPixmap("그림2.jpg")
+            # elif numberCount == "3": changeImage = QPixmap("그림3.jpg")
+            # elif numberCount == "0": changeImage = QPixmap("그림4.jpg")
+            # self.ui.numberCountLabel.setPixmap(changeImage)
 
-
-
+            #########################################################################################
             Form.selectLog(self)
             # 검사시작 버튼 클릭시 tab3에 보여줄 로그 데이터베이스에 INSERT
             logDB = mongoDB.DBConn("shutdown").log
             if logDB.count() == 10:
                 logDB.remove()
             insertLogData = {}
-            insertLogData.update({"date": todayTime, "filename":fname, "result":"normal","state":"finished"})
+            insertLogData.update({"date": todayTime, "filename": fname, "result": "normal", "state": "finished"})
             logDB.insert(insertLogData)
 
             self.tabWidget.setTabEnabled(1, True)
@@ -156,7 +159,7 @@ class Form(QtWidgets.QDialog):
         for item in logData:
             item = str(item).split(",")
             item[1] = item[1].replace("'date': '", "").replace("'", "")
-            item[2] = item[2].replace("'filename': '", "").replace("'", "").replace("\\\\","\\")
+            item[2] = item[2].replace("'filename': '", "").replace("'", "").replace("\\\\", "\\")
             item[3] = item[3].replace("'result': '", "").replace("'", "")
             item[4] = item[4].replace("'state': '", "").replace("'}", "")
             showData = []
@@ -172,18 +175,18 @@ class Form(QtWidgets.QDialog):
         self.ui.logTable.horizontalHeader().setStretchLastSection(True)
         self.ui.logTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.ui.logTable.setColumnWidth(0, 150)
-        self.ui.logTable.setColumnWidth(1,300)
+        self.ui.logTable.setColumnWidth(1, 300)
         self.ui.logTable.setSelectionBehavior(1)
 
     @pyqtSlot()
     def saveLogBtnClick(self):
         logDB = mongoDB.DBConn("shutdown").log
-        logData = logDB.find({},{'_id':0})
+        logData = logDB.find({}, {'_id': 0})
         logDBCount = logDB.count()
         for item in logData:
-            inputData = str(item).replace("{","").replace("}","")
+            inputData = str(item).replace("{", "").replace("}", "")
             f = open("log.txt", 'w')
-            for i in range(1, logDBCount+1):
+            for i in range(1, logDBCount + 1):
                 data = "NUMBER{} --> {}\n".format(i, inputData)
                 f.write(data)
             f.close()
@@ -192,15 +195,15 @@ class Form(QtWidgets.QDialog):
     def delLogBtnClick(self):
         logDB = mongoDB.DBConn("shutdown").log
         logDB.remove()
-        for j in range(0,11):
+        for j in range(0, 11):
             for i in range(0, 4):
-                self.ui.logTable.setItem(j, i,QTableWidgetItem(""))
+                self.ui.logTable.setItem(j, i, QTableWidgetItem(""))
 
     @pyqtSlot()
     def delFileBtnClick(self):
         try:
             selectedRow = self.ui.logTable.currentRow()
-            filePath = self.ui.logTable.item(selectedRow,1).text()
+            filePath = self.ui.logTable.item(selectedRow, 1).text()
             filePath = str(filePath).strip()
             print("삭제 시도!!")
             os.remove(filePath)
@@ -215,7 +218,7 @@ class Form(QtWidgets.QDialog):
         dname = QFileDialog.getExistingDirectory(self, 'Open Folder', '\\')
         dname = os.path.abspath(dname)
         self.ui.selected_folder.setText(dname)
-        totalNum = len(glob.glob(dname+"/*.exe"))
+        totalNum = len(glob.glob(dname + "/*.exe"))
         self.ui.numTotal.setText(str(totalNum))
 
     @pyqtSlot()
@@ -223,16 +226,16 @@ class Form(QtWidgets.QDialog):
         self.ui.inputNormal.setText(self.ui.numNormal.text())
         self.ui.inputMalware.setText(self.ui.numMalware.text())
 
-        flist = glob.glob(dname+"/*.exe")
+        flist = glob.glob(dname + "/*.exe")
         normalCount = 0
         malwareCount = 0
         for fname in flist:
             # 머신러닝 돌리는 코드
             # 파일 경로 전송해줘야됨
-            print("[+] fname : ",fname)
+            print("[+] fname : ", fname)
             machineRslt = fileMachine.getFIleMachine(fname)
             print("{+}", machineRslt)
-            if machineRslt == "NOMAL":
+            if machineRslt == "NORMAL":
                 normalCount += 1
             else:
                 malwareCount += 1
@@ -247,10 +250,10 @@ class Form(QtWidgets.QDialog):
             detectionResult = (abs(a - b) / b) * 100
         except:
             detectionResult = (abs(d - c) / c) * 100
-        self.ui.detectionResultLabel.setText(str(detectionResult)+"%")
+        self.ui.detectionResultLabel.setText(str(detectionResult) + "%")
 
         ## 결과값 그래프로 보여주기
-        colors = ["pink","skyblue"]
+        colors = ["pink", "skyblue"]
         title = "DETECTION RESULT"
         plt.title(title, fontsize=25)
         # label = ["NORMAL","MALWARE"]
@@ -261,7 +264,7 @@ class Form(QtWidgets.QDialog):
         fracs = [b, c]
 
         print("HERE")
-        plt.pie(fracs, labels=label, startangle=90,autopct='%1.1f%%', explode=(0,0.1), colors=colors)
+        plt.pie(fracs, labels=label, startangle=90, autopct='%1.1f%%', explode=(0, 0.1), colors=colors)
 
         chartImage = plt.gcf()
         chartImage.savefig("chartImage.jpg")
@@ -283,6 +286,7 @@ class MyDialog(QtWidgets.QDialog):
     @pyqtSlot()
     def selectNoBtn(self):
         self.close()
+
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)

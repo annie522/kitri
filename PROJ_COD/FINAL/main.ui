@@ -76,7 +76,7 @@
     <enum>QTabWidget::Rounded</enum>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <property name="iconSize">
     <size>
@@ -381,7 +381,7 @@ color: white;border:nono;</string>
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>../GUI_Test/그림1.jpg</pixmap>
+       <pixmap>그림1.jpg</pixmap>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -1194,7 +1194,7 @@ border-bottom-right-radius: 5px;</string>
       </rect>
      </property>
      <property name="text">
-      <string/>
+      <string>TextLabel</string>
      </property>
     </widget>
     <widget class="QLabel" name="detectedNormal">
@@ -1207,7 +1207,7 @@ border-bottom-right-radius: 5px;</string>
       </rect>
      </property>
      <property name="text">
-      <string/>
+      <string>TextLabel</string>
      </property>
     </widget>
     <widget class="QLabel" name="inputMalware">
@@ -1220,7 +1220,7 @@ border-bottom-right-radius: 5px;</string>
       </rect>
      </property>
      <property name="text">
-      <string/>
+      <string>TextLabel</string>
      </property>
     </widget>
     <widget class="QLabel" name="detectedMalware">
@@ -1233,7 +1233,7 @@ border-bottom-right-radius: 5px;</string>
       </rect>
      </property>
      <property name="text">
-      <string/>
+      <string>TextLabel</string>
      </property>
     </widget>
     <widget class="QLabel" name="resultGraph">
@@ -1246,7 +1246,7 @@ border-bottom-right-radius: 5px;</string>
       </rect>
      </property>
      <property name="text">
-      <string/>
+      <string>TextLabel</string>
      </property>
     </widget>
    </widget>
@@ -1375,7 +1375,7 @@ border-bottom-right-radius: 5px;</string>
    <sender>deSelFileBtn</sender>
    <signal>clicked()</signal>
    <receiver>QWidget</receiver>
-   <slot>delFileBtnClick()</slot>
+   <slot>delBtnClick()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>493</x>
@@ -1391,7 +1391,7 @@ border-bottom-right-radius: 5px;</string>
    <sender>fileopenBtn_2</sender>
    <signal>clicked()</signal>
    <receiver>QWidget</receiver>
-   <slot>folderopenBtnClick()</slot>
+   <slot>delBtnClick()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>513</x>
@@ -1423,7 +1423,7 @@ border-bottom-right-radius: 5px;</string>
    <sender>delFileBtn</sender>
    <signal>clicked()</signal>
    <receiver>QWidget</receiver>
-   <slot>delFileBtnClick()</slot>
+   <slot>delBtnClick()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>357</x>
@@ -1447,5 +1447,6 @@ border-bottom-right-radius: 5px;</string>
   <slot>tableRowClick()</slot>
   <slot>folderopenBtnClick()</slot>
   <slot>startFolderDetectionBtnClick()</slot>
+  <slot>delBtnClick()</slot>
  </slots>
 </ui>
