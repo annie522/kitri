@@ -201,11 +201,13 @@ def parse_resp(resp):
 #바이러스 토탈에게 요청해서 받은 정보 중 악성코드 진단한 밴더 수, 악성코드 종류,  MD5 3개의 값을 리턴해준다.
 def get_mal_kind(fileName):
     main = Virustotal()
-    FileSending = main.rscSubmit(fileName)
-    print(FileSending)
+    # FileSending = main.rscSubmit(fileName)
+    # print(FileSending)
     var = main.md5(fileName)
     dic = main.rscReport(var)
-    print(dic)
+    if str(dic)== "{}":
+        FileSending = main.rscSubmit(fileName)
+        print(FileSending)
     try:
         if dic['positives'] > 10:
             for key, value in dic['scans'].items():
@@ -216,7 +218,7 @@ def get_mal_kind(fileName):
     except:
         print("[+] dic['positives'] DOES NOT EXIST.")
         return 0, "ERROR"
-get_mal_kind("c:\Active800x600.exe")
+get_mal_kind("oksss.exe")
 
 
 

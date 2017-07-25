@@ -85,9 +85,6 @@ class Form(QtWidgets.QDialog):
                     print("[+] dic['positives'] DOES NOT EXIST.")
                     # self.up.numberCountLabel.setPiexmap("그림1.jpg")
                     ###############################
-            else:
-                print("Error !!!")
-
                 # 머신러닝 돌리는 코드
                 # 파일 경로 전송해줘야됨
                 machineRslt = fileMachine.getFIleMachine(fname)
@@ -98,8 +95,8 @@ class Form(QtWidgets.QDialog):
                     self.ui.page2_similarLabel.setText("악성파일")
                     self.ui.machineResultLabel.setText("악성파일")
                 self.ui.numberCountLabel.setPixmap(QPixmap("그림3.jpg"))
-
-
+            else:
+                print("Error !!!")
                 ################################
 
             #########################################################################################
