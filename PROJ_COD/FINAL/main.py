@@ -3,8 +3,6 @@ import os
 import sys
 from datetime import datetime
 
-import PROJ_COD.FINAL.Get_File_Hash as getFileHash
-import PROJ_COD.FINAL.Get_MongoDB_Connection as mongoDB
 import matplotlib.pyplot as plt
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import pyqtSlot, Qt
@@ -13,11 +11,10 @@ from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem, QAbstractItemView
 
 <<<<<<< Updated upstream:PROJ_COD/FINAL/main.py
 import PROJ_COD.FINAL.Get_File_Hash as getFileHash
-import PROJ_COD.FINAL.Get_Machine_Percentage as fileMachine
 import PROJ_COD.FINAL.Get_MongoDB_Connection as mongoDB
 import PROJ_COD.FINAL.Get_VirusTotal as vt
 =======
-import PROJ_COD.Machine.lee.final.Get_Machine_Percentage as fileMachine
+import PROJ_COD.FINAL.Get_Machine_Percentage as fileMachine
 >>>>>>> Stashed changes:PROJ_COD/Machine/lee/final/main.py
 
 

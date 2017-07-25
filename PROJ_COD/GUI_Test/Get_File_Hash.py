@@ -10,7 +10,7 @@ import PROJ_COD.MongoDB_Connection as mongoDB
 
 
 
-
+#파일 Hash값 추출
 def getFileHash(filename):
     with open(filename, 'rb') as fh:
         m = hashlib.md5()
@@ -21,7 +21,7 @@ def getFileHash(filename):
             m.update(data)
         return m.hexdigest()
 
-
+#파일의 Hash값과 DB에 있는 Hash값을 비교하여 MAIN 코드에 결과값을 전송
 def checkHashInDB(md5Hash):
     checkCount = 0
     try:
