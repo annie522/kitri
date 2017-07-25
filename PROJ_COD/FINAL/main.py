@@ -1,7 +1,7 @@
 import glob, sys, os
 from PyQt5 import QtWidgets, uic, QtGui
 from PyQt5.QtCore import pyqtSlot, Qt
-from PyQt5.QtGui import QPixmap, QIcon
+from PyQt5.QtGui import QPixmap, QIcon, QGuiApplication
 from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem, QAbstractItemView, QLabel
 from datetime import datetime
 import time
@@ -65,6 +65,7 @@ class Form(QtWidgets.QDialog):
     # tab0 검사시작버튼 클릭
     @pyqtSlot()
     def startFileDetectionBtnClick(self):
+        QGuiApplication.setOverrideCursor(Qt.WaitCursor)
         self.ui.loadingImg.show()
         Form.loadingAnimation(self)
         print(fname)
@@ -140,6 +141,7 @@ class Form(QtWidgets.QDialog):
 
         self.ui.loadingImg.hide()
         self.ui.loadingImg.repaint()
+        QGuiApplication.restoreOverrideCursor()
 
 
 
@@ -246,6 +248,7 @@ class Form(QtWidgets.QDialog):
 
     @pyqtSlot()
     def startFolderDetectionBtnClick(self):
+        QGuiApplication.setOverrideCursor(Qt.WaitCursor)
         count1 = int(self.ui.numNormal.text()) + int(self.ui.numMalware.text())
         count2 = int(self.ui.numTotal.text())
         if count1 != count2:
@@ -309,6 +312,8 @@ class Form(QtWidgets.QDialog):
 
             self.ui.loadingImg.hide()
             self.ui.loadingImg.repaint()
+
+            QGuiApplication.restoreOverrideCursor()
 
 
 if __name__ == '__main__':
