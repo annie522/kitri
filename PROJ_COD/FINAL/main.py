@@ -5,7 +5,6 @@ from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem, QAbstractItemView
 from datetime import datetime
 import matplotlib.pyplot as plt
-
 import PROJ_COD.FINAL.Get_File_Hash as getFileHash
 import PROJ_COD.FINAL.Get_Machine_Percentage as fileMachine
 import PROJ_COD.FINAL.Get_MongoDB_Connection as mongoDB
@@ -24,6 +23,7 @@ class Form(QtWidgets.QDialog):
         self.tabWidget.setTabEnabled(1, False)
         self.tabWidget.setTabEnabled(4, False)
         self.dialogTextBrowser = MyDialog(self)
+        self.ui.tab0ProcessLabel.setText("파일을 선택하세요")
 
         global fname
         fname = ""
@@ -36,6 +36,7 @@ class Form(QtWidgets.QDialog):
 
     @pyqtSlot()
     def startFileDetectionBtnClick(self):
+        self.ui.tab0ProcessLabel.setText("작동중")
         fname = self.ui.selected_file.text()
         if fname[-3:] != "exe" or fname == "":
             self.dialogTextBrowser.exec_()
@@ -49,6 +50,8 @@ class Form(QtWidgets.QDialog):
             self.ui.page2_filepathLabel.setText(fileDirName)
             fileHash = getFileHash.getFileHash(fname)
             self.ui.page2_md5Label.setText(fileHash)
+
+
 
             md5Check = getFileHash.checkHashInDB(fname)
             if md5Check[0] == "YES":
@@ -73,9 +76,19 @@ class Form(QtWidgets.QDialog):
                 print(dic)
                 print(dic[0])
                 try:
-                    if dic[0] > 10:
+                    if dic[0] > 4:
                         self.ui.numCountLabel2.setText("악성 코드")
                         self.ui.numberCountLabel.setPixmap(QPixmap("그림2.jpg"))
+                        # 머신러닝 돌리는 코드
+                        # 파일 경로 전송해줘야됨
+                        machineRslt = fileMachine.getFIleMachine(fname)
+                        if machineRslt == "NORMAL":
+                            self.ui.page2_similarLabel.setText("정상파일")
+                            self.ui.machineResultLabel.setText("정상파일")
+                        else:
+                            self.ui.page2_similarLabel.setText("악성파일")
+                            self.ui.machineResultLabel.setText("악성파일")
+                            self.ui.numberCountLabel.setPixmap(QPixmap("그림3.jpg"))
                     else:
                         self.ui.numCountLabel2.setText("정상 파일")
                         self.ui.numberCountLabel.setPixmap(QPixmap("그림2.jpg"))
@@ -85,16 +98,6 @@ class Form(QtWidgets.QDialog):
                     print("[+] dic['positives'] DOES NOT EXIST.")
                     # self.up.numberCountLabel.setPiexmap("그림1.jpg")
                     ###############################
-                # 머신러닝 돌리는 코드
-                # 파일 경로 전송해줘야됨
-                machineRslt = fileMachine.getFIleMachine(fname)
-                if machineRslt == "NORMAL":
-                    self.ui.page2_similarLabel.setText("정상파일")
-                    self.ui.machineResultLabel.setText("정상파일")
-                else:
-                    self.ui.page2_similarLabel.setText("악성파일")
-                    self.ui.machineResultLabel.setText("악성파일")
-                self.ui.numberCountLabel.setPixmap(QPixmap("그림3.jpg"))
             else:
                 print("Error !!!")
                 ################################
@@ -220,22 +223,28 @@ class Form(QtWidgets.QDialog):
 
     @pyqtSlot()
     def startFolderDetectionBtnClick(self):
+        self.ui.tab4ProcessLabel.setText("작동중")
         self.ui.inputNormal.setText(self.ui.numNormal.text())
         self.ui.inputMalware.setText(self.ui.numMalware.text())
 
         flist = glob.glob(dname + "/*.exe")
         normalCount = 0
         malwareCount = 0
+        # 바이러스 토탈 돌리기
         for fname in flist:
-            # 머신러닝 돌리는 코드
-            # 파일 경로 전송해줘야됨
-            print("[+] fname : ", fname)
-            machineRslt = fileMachine.getFIleMachine(fname)
-            print("{+}", machineRslt)
-            if machineRslt == "NORMAL":
-                normalCount += 1
+            dic = vt.get_mal_kind(fname)
+            if dic[0] > 4:
+                self.ui.numCountLabel2.setText("악성 코드")
+                self.ui.numberCountLabel.setPixmap(QPixmap("그림2.jpg"))
+                # 머신러닝 돌리는 코드
+                # 파일 경로 전송해줘야됨
+                machineRslt = fileMachine.getFIleMachine(fname)
+                if machineRslt == "NORMAL":
+                    normalCount += 1
+                else:
+                    malwareCount += 1
             else:
-                malwareCount += 1
+                normalCount += 1
 
         self.ui.detectedNormal.setText(str(normalCount))
         self.ui.detectedMalware.setText(str(malwareCount))
