@@ -194,7 +194,7 @@ font-weight:bold;
     <widget class="QToolButton" name="toolButton">
      <property name="geometry">
       <rect>
-       <x>280</x>
+       <x>277</x>
        <y>260</y>
        <width>150</width>
        <height>50</height>
@@ -233,7 +233,7 @@ color: white;border:nono;</string>
 font-weight: bold;</string>
      </property>
      <property name="text">
-      <string/>
+      <string>파일을 선택하세요</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -503,7 +503,7 @@ font-weight: bold;</string>
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="numCountLabel2">
+     <widget class="QLabel" name="VTResultLabel">
       <property name="geometry">
        <rect>
         <x>400</x>
@@ -616,7 +616,7 @@ font-weight: bold;</string>
     <widget class="QPushButton" name="delFileBtn">
      <property name="geometry">
       <rect>
-       <x>280</x>
+       <x>277</x>
        <y>260</y>
        <width>150</width>
        <height>50</height>
@@ -723,7 +723,7 @@ color: white;border:nono;</string>
     <widget class="QToolButton" name="delAllLogBtn">
      <property name="geometry">
       <rect>
-       <x>280</x>
+       <x>277</x>
        <y>260</y>
        <width>150</width>
        <height>50</height>
@@ -751,7 +751,7 @@ color: white;border:nono;</string>
     <widget class="QToolButton" name="deSelFileBtn">
      <property name="geometry">
       <rect>
-       <x>440</x>
+       <x>437</x>
        <y>260</y>
        <width>150</width>
        <height>50</height>
@@ -779,7 +779,7 @@ color: white;border:nono;</string>
     <widget class="QToolButton" name="saveLogBtn">
      <property name="geometry">
       <rect>
-       <x>120</x>
+       <x>117</x>
        <y>260</y>
        <width>150</width>
        <height>50</height>
@@ -958,7 +958,7 @@ font-weight:bold;
     <widget class="QToolButton" name="toolButton_2">
      <property name="geometry">
       <rect>
-       <x>280</x>
+       <x>277</x>
        <y>260</y>
        <width>150</width>
        <height>50</height>
@@ -1295,7 +1295,7 @@ background-color: rgb(223, 223, 223);
 font-weight:bold;</string>
      </property>
      <property name="text">
-      <string>오탐율</string>
+      <string>탐지율</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -1420,6 +1420,28 @@ border-left:0px;</string>
    </property>
    <property name="text">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;&lt;div style='line-height:50%;'&gt;EMDetector는 &lt;span style=&quot; font-weight: bold; color:#0F75BD&quot;&gt;의심스러운 파일&lt;/span&gt;을 분석하고&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;악성코드를 &lt;span style=&quot; font-weight: bold; color:#0F75BD&quot;&gt;머신러닝&lt;/span&gt;기반으로 탐지할수있는 서비스 입니다&lt;/span&gt;&lt;/div&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="loadingImg">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>731</width>
+     <height>531</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgba( 255, 255, 255, 0.5 );</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>image1.png</pixmap>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
