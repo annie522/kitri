@@ -1,7 +1,10 @@
 import random
-import PROJ_COD.FINAL.Get_MongoDB_Connection as mongoDB
+
 from sklearn import svm
+
 import PROJ_COD.FINAL.Get_File_Info as getFileInfo
+import PROJ_COD.FINAL.Get_MongoDB_Connection as mongoDB
+
 
 def getFIleMachine(filePath):
     opcode_data = mongoDB.DBConn("shutdown").opcode_data

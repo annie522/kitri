@@ -40,15 +40,12 @@ class Virustotal():
 
     #바이러스 토탈에 정보를 넘겨서 바이러스 토탈의 Report 값 가져오기
     def rscReport(self,filemd5):
-        """ Get latest report of resource """
         try:
-            print(filemd5)
             params = {'apikey': '7a20a8ed49ca09b249073a380e36b69830d4d58172fc5c9be7b42b24fdd4d183', 'resource': filemd5}
             headers = {
                 "Accept-Encoding": "gzip, deflate",
                 "User-Agent": "gzip,  My Python requests library example client or username"
             }
-            print("[+] VIRUSTOTAL API : Number01")
             response = requests.get('https://www.virustotal.com/vtapi/v2/file/report', params=params, headers=headers)
             json_response = response.json()
             results = parse_resp(json_response)
