@@ -352,7 +352,7 @@ color: white;border:nono;</string>
 &lt;span&gt;파일 경로&lt;/span&gt;&lt;span style=&quot;font-size:20px; color:white;&quot;&gt;1&lt;/span&gt;&lt;br&gt;
 &lt;span&gt;MD5&lt;/span&gt;&lt;span style=&quot;font-size:20px; color:white;&quot;&gt;1&lt;/span&gt;&lt;br&gt;
 &lt;span&gt;분석 날짜&lt;/span&gt;&lt;span style=&quot;font-size:20px; color:white;&quot;&gt;1&lt;/span&gt;&lt;br&gt;
-&lt;span&gt;유사도&lt;/span&gt;&lt;span style=&quot;font-size:20px; color:white;&quot;&gt;1&lt;/span&gt;&lt;br&gt;
+&lt;span&gt;결과&lt;/span&gt;&lt;span style=&quot;font-size:20px; color:white;&quot;&gt;1&lt;/span&gt;&lt;br&gt;
 &lt;/div&gt;</string>
      </property>
     </widget>
@@ -846,6 +846,9 @@ border-radius:3px;</string>
      <property name="text">
       <string/>
      </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
     </widget>
     <widget class="QLineEdit" name="numMalware">
      <property name="geometry">
@@ -862,6 +865,9 @@ border-radius:3px;</string>
      </property>
      <property name="text">
       <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
     <widget class="QLabel" name="selected_folder">
@@ -991,7 +997,7 @@ color: white;border:nono;</string>
       <rect>
        <x>80</x>
        <y>100</y>
-       <width>91</width>
+       <width>111</width>
        <height>16</height>
       </rect>
      </property>
@@ -1002,16 +1008,16 @@ color: white;border:nono;</string>
       </font>
      </property>
      <property name="text">
-      <string>전체 파일 : </string>
+      <string>전체 파일 :         개</string>
      </property>
     </widget>
     <widget class="QLabel" name="numTotal">
      <property name="geometry">
       <rect>
-       <x>170</x>
-       <y>100</y>
+       <x>140</x>
+       <y>99</y>
        <width>31</width>
-       <height>16</height>
+       <height>20</height>
       </rect>
      </property>
      <property name="font">
@@ -1021,7 +1027,10 @@ color: white;border:nono;</string>
       </font>
      </property>
      <property name="text">
-      <string>전체 파일 : </string>
+      <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
     <zorder>label_24</zorder>
@@ -1039,37 +1048,11 @@ color: white;border:nono;</string>
     <attribute name="title">
      <string>통계확인</string>
     </attribute>
-    <widget class="QLabel" name="label_13">
-     <property name="geometry">
-      <rect>
-       <x>370</x>
-       <y>30</y>
-       <width>91</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>나눔고딕</family>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgb(25, 59, 255);
-color: rgb(223, 223, 223);</string>
-     </property>
-     <property name="text">
-      <string>탐지 확률 검사</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
     <widget class="QLabel" name="label_14">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>110</y>
+       <x>399</x>
+       <y>190</y>
        <width>61</width>
        <height>21</height>
       </rect>
@@ -1087,8 +1070,8 @@ color: rgb(223, 223, 223);</string>
     <widget class="QLabel" name="label_15">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>80</y>
+       <x>399</x>
+       <y>160</y>
        <width>61</width>
        <height>16</height>
       </rect>
@@ -1106,8 +1089,8 @@ color: rgb(223, 223, 223);</string>
     <widget class="QLabel" name="label_16">
      <property name="geometry">
       <rect>
-       <x>470</x>
-       <y>50</y>
+       <x>480</x>
+       <y>130</y>
        <width>71</width>
        <height>21</height>
       </rect>
@@ -1125,8 +1108,8 @@ color: rgb(223, 223, 223);</string>
     <widget class="QLabel" name="label_17">
      <property name="geometry">
       <rect>
-       <x>580</x>
-       <y>50</y>
+       <x>566</x>
+       <y>130</y>
        <width>71</width>
        <height>21</height>
       </rect>
@@ -1141,99 +1124,68 @@ color: rgb(223, 223, 223);</string>
       <string>탐지 된 파일</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_18">
+    <widget class="QLabel" name="inputNormal">
      <property name="geometry">
       <rect>
-       <x>430</x>
-       <y>220</y>
-       <width>61</width>
-       <height>51</height>
+       <x>485</x>
+       <y>161</y>
+       <width>64</width>
+       <height>15</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <family>나눔고딕</family>
-       <pointsize>14</pointsize>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgb(25, 59, 255);
-color: rgb(223, 223, 223);
-border-top-left-radius:5px;
-border-bottom-left-radius: 5px;</string>
-     </property>
      <property name="text">
-      <string>오탐율</string>
+      <string/>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QLineEdit" name="detectionResultLabel">
-     <property name="geometry">
-      <rect>
-       <x>490</x>
-       <y>220</y>
-       <width>141</width>
-       <height>51</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">border: 1px solid rgb(58, 58, 58);
-border-top-right-radius:5px;
-border-bottom-right-radius: 5px;</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="inputNormal">
-     <property name="geometry">
-      <rect>
-       <x>470</x>
-       <y>80</y>
-       <width>64</width>
-       <height>15</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>TextLabel</string>
-     </property>
-    </widget>
     <widget class="QLabel" name="detectedNormal">
      <property name="geometry">
       <rect>
-       <x>580</x>
-       <y>80</y>
+       <x>569</x>
+       <y>161</y>
        <width>64</width>
        <height>15</height>
       </rect>
      </property>
      <property name="text">
-      <string>TextLabel</string>
+      <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
     <widget class="QLabel" name="inputMalware">
      <property name="geometry">
       <rect>
-       <x>480</x>
-       <y>110</y>
+       <x>485</x>
+       <y>193</y>
        <width>64</width>
        <height>15</height>
       </rect>
      </property>
      <property name="text">
-      <string>TextLabel</string>
+      <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
     <widget class="QLabel" name="detectedMalware">
      <property name="geometry">
       <rect>
-       <x>580</x>
-       <y>110</y>
+       <x>569</x>
+       <y>193</y>
        <width>64</width>
        <height>15</height>
       </rect>
      </property>
      <property name="text">
-      <string>TextLabel</string>
+      <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
     <widget class="QLabel" name="resultGraph">
@@ -1246,9 +1198,137 @@ border-bottom-right-radius: 5px;</string>
       </rect>
      </property>
      <property name="text">
-      <string>TextLabel</string>
+      <string/>
      </property>
     </widget>
+    <widget class="QToolButton" name="toolButton_3">
+     <property name="geometry">
+      <rect>
+       <x>380</x>
+       <y>60</y>
+       <width>281</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>맑은 고딕</family>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid rgb(200, 200, 200);
+background-color: rgb(223, 223, 223);
+font-weight:bold;</string>
+     </property>
+     <property name="text">
+      <string>비교</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="selected_folder_2">
+     <property name="geometry">
+      <rect>
+       <x>380</x>
+       <y>250</y>
+       <width>121</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid rgb(200, 200, 200);
+background-color: rgb(223, 223, 223);
+font-weight:bold;</string>
+     </property>
+     <property name="text">
+      <string>오탐율</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QToolButton" name="detectionResultLabel">
+     <property name="geometry">
+      <rect>
+       <x>500</x>
+       <y>250</y>
+       <width>161</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Agency FB</family>
+       <pointsize>9</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid rgb(200, 200, 200);
+border-left:0px;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QToolButton" name="detectionResultLabel_2">
+     <property name="geometry">
+      <rect>
+       <x>380</x>
+       <y>60</y>
+       <width>281</width>
+       <height>221</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Agency FB</family>
+       <pointsize>9</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid rgb(200, 200, 200);
+</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <zorder>detectionResultLabel_2</zorder>
+    <zorder>label_14</zorder>
+    <zorder>label_15</zorder>
+    <zorder>label_16</zorder>
+    <zorder>label_17</zorder>
+    <zorder>resultGraph</zorder>
+    <zorder>toolButton_3</zorder>
+    <zorder>selected_folder_2</zorder>
+    <zorder>detectionResultLabel</zorder>
+    <zorder>inputNormal</zorder>
+    <zorder>detectedNormal</zorder>
+    <zorder>inputMalware</zorder>
+    <zorder>detectedMalware</zorder>
    </widget>
   </widget>
   <widget class="QLabel" name="title">
