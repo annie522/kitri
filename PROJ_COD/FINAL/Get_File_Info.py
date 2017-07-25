@@ -69,52 +69,55 @@ def retrieve_flags(flag_dict, flag_filter):
 section_flags = retrieve_flags(SECTION_CHARACTERISTICS, 'IMAGE_SCN_')
 
 def getFileInfo(filePath):
-    pe = pefile.PE(filePath)
     op_list_count = {"kind": "", "hash": "","detect":"", "BT": 0, "FDIVP": 0, "FILD": 0, "IMUL": 0, "INT": 0, "NOP": 0, "SBB": 0, "SHLD": 0, "STD": 0}
     op_list_count_md = {"kind": "", "hash": "","detect":"", "BT": 0, "FDIVP": 0, "FILD": 0, "IMUL": 0, "INT": 0, "NOP": 0, "SBB": 0, "SHLD": 0, "STD": 0}
+    try:
+        pe = pefile.PE(filePath)
 
-    for section in pe.sections:
-        flags = []
-        for flag in sorted(section_flags):
-            if getattr(section, flag[0]):
-                flags.append(flag[0])
-        if 'IMAGE_SCN_MEM_EXECUTE' in flags:
-            iterable = distorm3.DecodeGenerator(0, section.get_data(), distorm3.Decode32Bits)
-
-            for (offset, size, instruction, hexdump) in iterable:
-                op_code = instruction.split()[0]
-                op_code = str(op_code).lstrip('b')
-                op_code = str(op_code).replace("'", "")
-                if op_code not in op_list_count.keys():
-                    op_list_count[op_code] = 1
-                elif op_code in op_list_count.keys():
-                    op_list_count[op_code] = op_list_count[op_code] + 1
-
+        for section in pe.sections:
+            flags = []
             for flag in sorted(section_flags):
                 if getattr(section, flag[0]):
                     flags.append(flag[0])
-        s_name1 = str(section.Name)
-        s_name = re.sub(r"[b'|\\x00]", "", s_name1)
-        if s_name == '.tet':
-            s_name = '.text'
-        s_name = s_name.replace(".", "_")
+            if 'IMAGE_SCN_MEM_EXECUTE' in flags:
+                iterable = distorm3.DecodeGenerator(0, section.get_data(), distorm3.Decode32Bits)
 
-    pe.parse_data_directories(
-        pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_IMPORT'])
+                for (offset, size, instruction, hexdump) in iterable:
+                    op_code = instruction.split()[0]
+                    op_code = str(op_code).lstrip('b')
+                    op_code = str(op_code).replace("'", "")
+                    if op_code not in op_list_count.keys():
+                        op_list_count[op_code] = 1
+                    elif op_code in op_list_count.keys():
+                        op_list_count[op_code] = op_list_count[op_code] + 1
 
-    op_list_count_md.update({
-        "kind": op_list_count.get("kind"),
-        "hash": op_list_count.get("hash"),
-        "detect": op_list_count.get("detect"),
-        "BT": op_list_count.get("BT"),
-        "FDIVP": op_list_count.get("FDIVP"),
-        "FILD": op_list_count.get("FILD"),
-        "IMUL": op_list_count.get("IMUL"),
-        "INT": op_list_count.get("INT"),
-        "NOP": op_list_count.get("NOP"),
-        "SBB": op_list_count.get("SBB"),
-        "SHLD": op_list_count.get("SHLD"),
-        "STD": op_list_count.get("STD"),
-    })
-    op_list_count_md.update({"kind": "", "detect": "", "hash": fh.getFileHash(filePath)})
-    return op_list_count_md
+                for flag in sorted(section_flags):
+                    if getattr(section, flag[0]):
+                        flags.append(flag[0])
+            s_name1 = str(section.Name)
+            s_name = re.sub(r"[b'|\\x00]", "", s_name1)
+            if s_name == '.tet':
+                s_name = '.text'
+            s_name = s_name.replace(".", "_")
+
+        pe.parse_data_directories(
+            pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_IMPORT'])
+
+        op_list_count_md.update({
+            "kind": op_list_count.get("kind"),
+            "hash": op_list_count.get("hash"),
+            "detect": op_list_count.get("detect"),
+            "BT": op_list_count.get("BT"),
+            "FDIVP": op_list_count.get("FDIVP"),
+            "FILD": op_list_count.get("FILD"),
+            "IMUL": op_list_count.get("IMUL"),
+            "INT": op_list_count.get("INT"),
+            "NOP": op_list_count.get("NOP"),
+            "SBB": op_list_count.get("SBB"),
+            "SHLD": op_list_count.get("SHLD"),
+            "STD": op_list_count.get("STD"),
+        })
+        op_list_count_md.update({"kind": "", "detect": "", "hash": fh.getFileHash(filePath)})
+        return op_list_count_md
+    except:
+        return "NOPEFILE"
