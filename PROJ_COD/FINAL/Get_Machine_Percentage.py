@@ -33,18 +33,14 @@ def getFIleMachine(filePath):
     del data2['kind']
     del data2['hash']
     del data2['detect']
-    print("{-} train_data  : ", train_data)
-    print("{-} train_label : ", train_label)
 
     data2 = list(data2.values())
     test_data.append(data2)
     test_label.append(label)
 
-    print("{-} test_data   : ", test_data)
-    print("{-} test_label  : ", test_label)
-
     # 데이터를 학습시키고 예측하기
     clf = svm.SVC()
     clf.fit(train_data, train_label)
     pre = clf.predict(test_data)
+    print("{-} PREDICTION  : ", pre[0])
     return pre[0]

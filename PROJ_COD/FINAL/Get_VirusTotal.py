@@ -2,7 +2,7 @@ import requests
 import json
 import hashlib
 import sys
-
+import PROJ_COD.FINAL.Get_File_Hash as getFileHash
 """
 작성일   : 2017-07-??(최초작성)
 수정일   : 
@@ -42,7 +42,6 @@ class Virustotal():
     def rscReport(self,filemd5):
         """ Get latest report of resource """
         try:
-            print(filemd5)
             params = {'apikey': '7a20a8ed49ca09b249073a380e36b69830d4d58172fc5c9be7b42b24fdd4d183', 'resource': filemd5}
             headers = {
                 "Accept-Encoding": "gzip, deflate",
@@ -203,23 +202,15 @@ def get_mal_kind(fileName):
     main = Virustotal()
     # FileSending = main.rscSubmit(fileName)
     # print(FileSending)
-    var = main.md5(fileName)
+    var = getFileHash.getFileHash(fileName)
     dic = main.rscReport(var)
-    print(dic['verbose_msg'])
     if str(dic)== "{}" or str(dic['verbose_msg']) == "The requested resource is not among the finished, queued or pending scans":
         FileSending = main.rscSubmit(fileName)
-        print(FileSending)
-    # print("dic['positives']    dfsfsfsdfsdfs  ", dic['positives'])
     dic = main.rscReport(var)
-    print(dic)
     try:
-        print("dic['positives']    dfsfsfsdfsdfs  ",dic['positives'])
-        if dic['positives'] > 10:
-            print("wwwwwwwwwwwwwwww")
+        if dic['positives'] > 4:
             for key, value in dic['scans'].items():
-                print("eeeeeeeeeeeeeeeeeee")
                 if value['result'] != None:
-                    print("rrrrrrrrrrrrrrrrrr")
                     return dic['positives'], value['result']
         else:
             return 0, "NORMAL"
