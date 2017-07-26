@@ -265,8 +265,16 @@ class Form(QtWidgets.QDialog):
             malwareCount = 0
             # 바이러스 토탈 돌리기
             for fname in flist:
+                print("[+]---------------------------------------------------------------------------------------->")
+                print("[+] file Path : ", fname)
                 dic = vt.get_mal_kind(fname)
                 if dic[0] > 4:
+                    machineRslt = fileMachine.getFIleMachine(fname)
+                    if machineRslt == "NORMAL":
+                        normalCount += 1
+                    else:
+                        malwareCount += 1
+                elif dic[0] == 0 and dic[1] == "ERROR":
                     machineRslt = fileMachine.getFIleMachine(fname)
                     if machineRslt == "NORMAL":
                         normalCount += 1

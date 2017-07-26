@@ -1,3 +1,4 @@
+
 import glob
 
 import PROJ_COD.FINAL.Get_File_Info as getFileInfo
@@ -5,9 +6,9 @@ import PROJ_COD.FINAL.Get_VirusTotal as getVirustotal
 import PROJ_COD.FINAL.Get_File_Hash as getFileHash
 import PROJ_COD.FINAL.Get_MongoDB_Connection as mongoDB
 
-learnFiles = glob.glob("G:\\악성코드\\*.exe")
+# learnFiles = glob.glob("C:\\opt\\malware\\unsorted\\*")
 # learnFiles = glob.glob("G:\\exe파일\\*.exe")
-# learnFiles = glob.glob("G:\\exe파일\\새 폴더\\*.exe")
+learnFiles = glob.glob("G:\\exe파일\\새 폴더\\*.exe")
 # learnFiles = glob.glob("C:\\Users\\Administrator\\Downloads\\*.exe")
 
 def insertDataToDatabase():
